@@ -2,13 +2,13 @@
 
 connect_factset_db <-
   function(
-      dbname = "delta",
-      host = "data-eval-db.postgres.database.azure.com",
-      port = 5432L,
+      dbname = Sys.getenv("PGDATABASE"),
+      host = Sys.getenv("PGHOST"),
+      port = Sys.getenv("PGPORT", 5432L),
       options = "-c search_path=fds",
-      username = Sys.getenv("R_DATABASE_USER"),
-      password = Sys.getenv("R_DATABASE_PASSWORD"),
-      keyring_service_name = "2dii_factset_database") {
+      username = Sys.getenv("PGUSER"),
+      password = Sys.getenv("PGPASSWORD"),
+      keyring_service_name = "factset_database") {
 
     if (username == "") {
       logger::log_error(
