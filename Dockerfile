@@ -47,6 +47,14 @@ RUN echo "options(repos = c(CRAN = '$CRAN_REPO'), pkg.sysreqs = FALSE)" >> "${R_
       # install packages for dependency resolution and installation
       && Rscript -e "install.packages(c('pak', 'jsonlite'))"
 
+# Install R deopendencies
+COPY DESCRIPTION /workflow.factset/DESCRIPTION
+
+# install R package dependencies
+RUN Rscript -e "\
+  deps <- pak::local_install_deps(root = '/workflow.factset'); \
+  "
+
 # copy in everything from this repo
 COPY . /workflow.factset
 
@@ -58,4 +66,4 @@ RUN Rscript -e "\
 USER runner-workflow-factset
 
 # set default run behavior
-CMD ["Rscript", "-e", "workflow.factset::export_pacta_files()"]
+CMD ["Rscript", "-e", "logger::log_threshold(Sys.getenv('LOG_LEVEL', 'INFO'));workflow.factset::export_pacta_files()"]
