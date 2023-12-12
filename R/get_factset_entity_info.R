@@ -46,7 +46,10 @@ get_factset_entity_info <-
 
     factset_entity_id__factset_sector_desc <-
       factset_entity_id__sector_code %>%
-      dplyr::left_join(factset_sector_code__factset_sector_desc, by = c("sector_code" = "factset_sector_code")) %>%
+      dplyr::left_join(
+        factset_sector_code__factset_sector_desc,
+        by = c("sector_code" = "factset_sector_code")
+      ) %>%
       dplyr::select("factset_entity_id", "sector_code", "factset_sector_desc")
 
 
@@ -63,20 +66,35 @@ get_factset_entity_info <-
 
     factset_entity_id__factset_industry_desc <-
       factset_entity_id__industry_code %>%
-      dplyr::left_join(factset_industry_code_factset_industry_desc, by = c("industry_code" = "factset_industry_code")) %>%
-      dplyr::select("factset_entity_id", "industry_code", "factset_industry_desc")
+      dplyr::left_join(
+        factset_industry_code_factset_industry_desc,
+        by = c("industry_code" = "factset_industry_code")
+      ) %>%
+      dplyr::select(
+        "factset_entity_id",
+        "industry_code",
+        "factset_industry_desc"
+      )
 
 
     # credit risk parent -------------------------------------------------------
 
     logger::log_trace("Accessing entity credit risk parent.")
-    ent_v1_ent_entity_affiliates <- dplyr::tbl(factset_db, "ent_v1_ent_entity_affiliates")
-    ref_v2_affiliate_type_map <- dplyr::tbl(factset_db, "ref_v2_affiliate_type_map")
+    ent_v1_ent_entity_affiliates <- dplyr::tbl(
+      factset_db,
+      "ent_v1_ent_entity_affiliates"
+    )
+    ref_v2_affiliate_type_map <- dplyr::tbl(
+      factset_db,
+      "ref_v2_affiliate_type_map"
+    )
 
     ent_entity_affiliates_last_update <-
       dplyr::tbl(factset_db, "fds_fds_file_history") %>%
       dplyr::filter(.data$table_name == "ent_entity_affiliates") %>%
-      dplyr::filter(.data$begin_time == max(.data$begin_time, na.rm = TRUE)) %>%
+      dplyr::filter(
+        .data$begin_time == max(.data$begin_time, na.rm = TRUE)
+      ) %>%
       dplyr::pull("begin_time")
 
     factset_entity_id__credit_parent_id <-
@@ -87,7 +105,9 @@ get_factset_entity_info <-
         factset_entity_id = "factset_affiliated_entity_id",
         credit_parent_id = "factset_entity_id"
       ) %>%
-      dplyr::mutate(ent_entity_affiliates_last_update = .env$ent_entity_affiliates_last_update)
+      dplyr::mutate(
+        ent_entity_affiliates_last_update = .env$ent_entity_affiliates_last_update
+      )
 
 
     # merge and collect --------------------------------------------------------
@@ -95,10 +115,22 @@ get_factset_entity_info <-
     logger::log_trace("Merging entity info.")
     entity_info <-
       factset_entity_id__entity_proper_name %>%
-      dplyr::left_join(factset_entity_id__iso_country, by = "factset_entity_id") %>%
-      dplyr::left_join(factset_entity_id__factset_sector_desc, by = "factset_entity_id") %>%
-      dplyr::left_join(factset_entity_id__factset_industry_desc, by = "factset_entity_id") %>%
-      dplyr::left_join(factset_entity_id__credit_parent_id, by = "factset_entity_id")
+      dplyr::left_join(
+        factset_entity_id__iso_country,
+        by = "factset_entity_id"
+      ) %>%
+      dplyr::left_join(
+        factset_entity_id__factset_sector_desc,
+        by = "factset_entity_id"
+      ) %>%
+      dplyr::left_join(
+        factset_entity_id__factset_industry_desc,
+        by = "factset_entity_id"
+      ) %>%
+      dplyr::left_join(
+        factset_entity_id__credit_parent_id,
+        by = "factset_entity_id"
+      )
 
     logger::log_trace("Downloading merged entity info from database.")
     entity_info <- dplyr::collect(entity_info)

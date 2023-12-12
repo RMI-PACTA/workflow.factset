@@ -11,31 +11,44 @@ connect_factset_db <-
       keyring_service_name = "2dii_factset_database") {
 
     if (username == "") {
-      logger::log_error("No database username could be found. Please set the username as an environment variable")
+      logger::log_error(
+        "No database username could be found. ",
+        "Please set the username as an environment variable"
+      )
     }
 
     if (password == "") {
       # if password not defined in .env, look in systems keyring
       if (requireNamespace("keyring", quietly = TRUE)) {
-        if (!username %in% keyring::key_list(service = keyring_service_name)$username) {
+        if (
+          !username %in% keyring::key_list(
+            service = keyring_service_name
+          )$username
+        ) {
+          keyring_prompt <- paste(
+            "Enter password for the FactSet database",
+            "(it will be stored in your system's keyring):"
+          )
           keyring::key_set(
             service = keyring_service_name,
             username = username,
-            prompt = "Enter password for the FactSet database (it will be stored in your system's keyring): "
+            prompt = keyring_prompt
           )
         }
         password <- keyring::key_get(
           service = keyring_service_name,
           username = username
         )
-      } else if (interactive() && requireNamespace("rstudioapi", quietly = TRUE)) {
+      } else if (
+        interactive() && requireNamespace("rstudioapi", quietly = TRUE)
+      ) {
         password <- rstudioapi::askForPassword(
           prompt = "Please enter the FactSet database password:"
         )
       } else {
         logger::log_error(
-          "No database password could be found. Please set the password
-          as an environment variable"
+          "No database password could be found. ",
+          "Please set the password as an environment variable"
         )
       }
     }
@@ -58,7 +71,7 @@ connect_factset_db <-
   }
 
 # connection finalizer to ensure connection is closed --------------------------
-# adapted from: https://shrektan.com/post/2019/07/26/create-a-database-connection-that-can-be-disconnected-automatically/
+# adapted from: https://shrektan.com/post/2019/07/26/create-a-database-connection-that-can-be-disconnected-automatically/ #nolint
 
 reg_conn_finalizer <- function(conn, close_fun, envir) {
   is_parent_global <- identical(.GlobalEnv, envir)
@@ -70,7 +83,11 @@ reg_conn_finalizer <- function(conn, close_fun, envir) {
 
     reg.finalizer(env_finalizer, function(e) {
       if (DBI::dbIsValid(e$conn)) {
-        logger::log_warn("Warning: A database connection was closed automatically because the connection object was removed or the R session was closed.")
+        logger::log_warn(
+          "Warning: A database connection was closed automatically ",
+          "because the connection object was removed ",
+          "or the R session was closed."
+        )
         try(close_fun(e$conn))
       }
     }, onexit = TRUE)
@@ -82,8 +99,12 @@ reg_conn_finalizer <- function(conn, close_fun, envir) {
           host <- DBI::dbGetInfo(conn)$host
 
           logger::log_warn(
-            "The database connection to {dbname} on {host} was
-        closed automatically because the calling environment was closed."
+            "The database connection to ",
+            dbname,
+            " on ",
+            host,
+            " was closed automatically ",
+            "because the calling environment was closed."
           )
           try(close_fun(conn))
         }
