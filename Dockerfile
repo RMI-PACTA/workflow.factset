@@ -58,4 +58,4 @@ RUN Rscript -e "\
 USER runner-workflow-factset
 
 # set default run behavior
-CMD ["input_dir/default_config.json"]
+CMD ["Rscript", "-e", "workflow.factset::export_pacta_files()"]
