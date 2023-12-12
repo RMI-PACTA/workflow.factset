@@ -33,23 +33,19 @@ RUN groupadd -r runner-workflow-factset \
       && chown -R runner-workflow-factset /home/runner-workflow-factset
 WORKDIR /home/runner-workflow-factset
 
-# # install system dependencies
-# RUN apt-get update \
-#     && apt-get install -y --no-install-recommends \
-#       git=1:2.34.* \
-#       libcurl4-openssl-dev=7.81.* \
-#       libicu-dev=70.* \
-#       libssl-dev=3.0.* \
-#       openssh-client=1:8.* \
-#       wget=1.21.* \
-#     && chmod -R a+rwX /root \
-#     && rm -rf /var/lib/apt/lists/*
+# install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+      libicu-dev=70.* \
+      libpq-dev=14.* \
+    && chmod -R a+rwX /root \
+    && rm -rf /var/lib/apt/lists/*
 
 # set frozen CRAN repo
 ARG CRAN_REPO="https://packagemanager.posit.co/cran/__linux__/jammy/2023-10-30"
 RUN echo "options(repos = c(CRAN = '$CRAN_REPO'), pkg.sysreqs = FALSE)" >> "${R_HOME}/etc/Rprofile.site" \
       # install packages for dependency resolution and installation
-      && Rscript -e "install.packages('pak')"
+      && Rscript -e "install.packages(c('pak', 'jsonlite'))"
 
 # copy in everything from this repo
 COPY . /workflow.factset
