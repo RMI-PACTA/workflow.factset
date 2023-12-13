@@ -31,7 +31,7 @@ export_pacta_files <- function(
     )
   }
 
-  start_time <- Sys.getenv(
+  start_time_chr <- Sys.getenv(
     "DEPLOY_START_TIME",
     format(Sys.time(), format = "%Y%m%dT%H%M%S", tz = "UTC"),
     )
@@ -46,12 +46,19 @@ export_pacta_files <- function(
   }
 
   if (inherits(data_timestamp, "POSIXct")) {
-    data_timestamp <- format(data_timestamp, format = "%Y%m%dT%H%M%S", tz = "UTC")
+    data_timestamp_chr <- format(data_timestamp, format = "%Y%m%dT%H%M%S", tz = "UTC")
+  } else {
+    logger::log_error(
+      "The data_timestamp argument must be a POSIXct object ",
+      "or a character string coercible to POSIXct format",
+      " (using lubridate::ymd_hms(truncated = 3))."
+    )
+    stop("Invalid data_timestamp argument.")
   }
 
   export_dir <- file.path(
     destination,
-    paste0(data_timestamp, "_pulled", start_time)
+    paste0(data_timestamp_chr, "_pulled", start_time_chr)
     )
 
   if (!dir.exists(export_dir)) {
@@ -66,7 +73,7 @@ export_pacta_files <- function(
   logger::log_info("Exporting entity info data to {factset_entity_info_path}")
   saveRDS(object = entity_info, file = factset_entity_info_path)
 
-  log_info("Done with data export.")
+  logger::log_info("Done with data export.")
   return(
     invisible(
       list(
