@@ -34,7 +34,7 @@ export_pacta_files <- function(
   start_time_chr <- Sys.getenv(
     "DEPLOY_START_TIME",
     format(Sys.time(), format = "%Y%m%dT%H%M%S", tz = "UTC"),
-    )
+  )
 
   if (inherits(data_timestamp, "character")) {
     data_timestamp <- lubridate::ymd_hms(
@@ -46,7 +46,11 @@ export_pacta_files <- function(
   }
 
   if (inherits(data_timestamp, "POSIXct")) {
-    data_timestamp_chr <- format(data_timestamp, format = "%Y%m%dT%H%M%S", tz = "UTC")
+    data_timestamp_chr <- format(
+      data_timestamp,
+      format = "%Y%m%dT%H%M%S",
+      tz = "UTC"
+    )
   } else {
     logger::log_error(
       "The data_timestamp argument must be a POSIXct object ",
@@ -59,7 +63,7 @@ export_pacta_files <- function(
   export_dir <- file.path(
     destination,
     paste0(data_timestamp_chr, "_pulled", start_time_chr)
-    )
+  )
 
   if (!dir.exists(export_dir)) {
     dir.create(export_dir, recursive = TRUE)
