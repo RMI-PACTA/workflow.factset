@@ -1,0 +1,160 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "0.0.0.5",
+
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
+      }
+    },
+    "identity": {
+      "type": "string",
+      "metadata": {
+        "description": "The ID of the user assigned identity to use for the container group."
+      }
+    },
+    "containerGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the container group."
+      }
+    },
+    "restartPolicy": {
+      "type": "string",
+      "defaultValue": "OnFailure",
+      "allowedValues": [
+        "Always",
+        "Never",
+        "OnFailure"
+      ],
+      "metadata": {
+        "description": "The behavior of Azure runtime if container has stopped."
+      }
+    },
+    "rawdata-storageaccountkey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The storage account key for the rawdata storage account."
+      }
+    },
+    "database-password": {
+      "type": "securestring",
+      "metadata": {
+        "description": "password to connect to database"
+      }
+    },
+    "starttime": {
+      "type": "string",
+      "defaultValue": "[utcNow()]",
+      "metadata": {
+        "description": "The time to start the container group."
+      }
+    }
+  },
+
+  "variables": {
+    "PGDATABASE": "FDS",
+    "PGHOST": "[concat('factset-01-postgres', '.postgres.database.azure.com')]",
+    "PGUSER": "postgres",
+    "containerregistry": "ghcr.io/rmi-pacta",
+    "machineCpuCores": 1,
+    "machineMemoryInGB": 4,
+    "mountPathExport": "/mnt/factset-extracted"
+  },
+
+  "functions": [],
+
+  "resources": [
+    {
+      "type": "Microsoft.ContainerInstance/containerGroups",
+      "apiVersion": "2021-09-01",
+      "name": "[parameters('containerGroupName')]",
+      "location": "[parameters('location')]",
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[parameters('identity')]": {}
+        }
+      },
+      "properties": {
+        "containers": [
+          {
+            "name": "loader-runner",
+            "properties": {
+              "image": "[concat(variables('containerregistry'),'/workflow.factset:pr1')]",
+              "ports": [],
+              "resources": {
+                "requests": {
+                  "cpu": "[variables('machineCpuCores')]",
+                  "memoryInGB": "[variables('machineMemoryInGB')]"
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "PGUSER",
+                  "value": "[variables('PGUSER')]"
+                },
+                {
+                  "name": "PGPASSWORD",
+                  "secureValue": "[parameters('database-password')]"
+                },
+                {
+                  "name": "PGHOST",
+                  "value": "[variables('PGHOST')]"
+                },
+                {
+                  "name": "PGDATABASE",
+                  "value": "[variables('PGDATABASE')]"
+                },
+                {
+                  "name": "DEPLOY_START_TIME",
+                  "value": "[parameters('starttime')]"
+                },
+                {
+                  "name": "MACHINE_CORES",
+                  "value": "[variables('machineCpuCores')]"
+                },
+                {
+                  "name": "LOG_LEVEL",
+                  "value": "TRACE"
+                },
+                {
+                  "name": "EXPORT_DESTINATION",
+                  "value": "[variables('mountPathExport')]"
+                },
+                                {
+                  "name": "DATA_TIMESTAMP",
+                  "value": "20230123"
+                }
+
+              ],
+              "volumeMounts": [
+                {
+                  "name": "factset-extracted",
+                  "mountPath": "[variables('mountPathExport')]"
+                }
+              ]
+            }
+          }
+        ],
+        "restartPolicy": "[parameters('restartPolicy')]",
+        "osType": "Linux",
+        "volumes": [
+          {
+            "name": "factset-extracted",
+            "azureFile": {
+              "shareName": "factset-extracted",
+              "readOnly": false,
+              "storageAccountName": "pactarawdata",
+              "storageAccountKey": "[parameters('rawdata-storageaccountkey')]"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "outputs": {}
+}
