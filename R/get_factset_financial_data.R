@@ -17,64 +17,77 @@ get_factset_financial_data <-
 
     factset_db <- connect_factset_db(...)
 
+    logger::log_debug("Extracting financial info from database.")
+    logger::log_info("using data timestamp: ", data_timestamp)
+
 
     # fsym_id__factset_entity_id -----------------------------------------------
 
+    logger::log_trace("Accessing entity id.")
     fsym_id__factset_entity_id <-
-      tbl(factset_db, "own_v5_own_sec_entity") %>%
-      select("fsym_id", "factset_entity_id")
+      dplyr::tbl(factset_db, "own_v5_own_sec_entity") %>%
+      dplyr::select("fsym_id", "factset_entity_id")
 
 
     # isin ---------------------------------------------------------------------
 
-    fsym_id__isin <- tbl(factset_db, "sym_v1_sym_isin")
+    logger::log_trace("Accessing ISINs.")
+    fsym_id__isin <- dplyr::tbl(factset_db, "sym_v1_sym_isin")
 
 
     # adj_price ----------------------------------------------------------------
 
+    browser()
+    logger::log_trace("Accessing share prices.")
     fsym_id__adj_price <-
-      tbl(factset_db, "own_v5_own_sec_prices") %>%
+      dplyr::tbl(factset_db, "own_v5_own_sec_prices") %>%
       dplyr::filter(.data$price_date == .env$data_timestamp) %>%
-      select("fsym_id", "adj_price")
+      dplyr::select("fsym_id", "adj_price")
 
 
     # adj_shares_outstanding ---------------------------------------------------
 
+    logger::log_trace("Accessing shares outstanding.")
     fsym_id__adj_shares_outstanding <-
-      tbl(factset_db, "own_v5_own_sec_prices") %>%
+      dplyr::tbl(factset_db, "own_v5_own_sec_prices") %>%
       dplyr::filter(.data$price_date == .env$data_timestamp) %>%
-      select("fsym_id", "adj_shares_outstanding")
+      dplyr::select("fsym_id", "adj_shares_outstanding")
 
 
     # issue_type ---------------------------------------------------------------
 
+    logger::log_trace("Accessing issue type.")
     fsym_id__issue_type <-
-      tbl(factset_db, "own_v5_own_sec_coverage") %>%
-      select("fsym_id", "issue_type")
+      dplyr::tbl(factset_db, "own_v5_own_sec_coverage") %>%
+      dplyr::select("fsym_id", "issue_type")
 
 
     # one_adr_eq ---------------------------------------------------------------
 
+    logger::log_trace("Accessing ADR equivilents.")
     fsym_id__one_adr_eq <-
-      tbl(factset_db, "own_v5_own_sec_adr_ord_ratio") %>%
-      select("fsym_id" = "adr_fsym_id", "one_adr_eq")
+      dplyr::tbl(factset_db, "own_v5_own_sec_adr_ord_ratio") %>%
+      dplyr::select("fsym_id" = "adr_fsym_id", "one_adr_eq")
 
 
     # merge and collect --------------------------------------------------------
 
+    logger::log_trace("Merging financial info.")
     fin_data <-
       fsym_id__isin %>%
-      left_join(fsym_id__factset_entity_id, by = "fsym_id") %>%
-      left_join(fsym_id__adj_price, by = "fsym_id") %>%
-      left_join(fsym_id__adj_shares_outstanding, by = "fsym_id") %>%
-      left_join(fsym_id__issue_type, by = "fsym_id") %>%
-      left_join(fsym_id__one_adr_eq, by = "fsym_id") %>%
-      dplyr::collect()
+      dplyr::left_join(fsym_id__factset_entity_id, by = "fsym_id") %>%
+      dplyr::left_join(fsym_id__adj_price, by = "fsym_id") %>%
+      dplyr::left_join(fsym_id__adj_shares_outstanding, by = "fsym_id") %>%
+      dplyr::left_join(fsym_id__issue_type, by = "fsym_id") %>%
+      dplyr::left_join(fsym_id__one_adr_eq, by = "fsym_id")
 
+    logger::log_trace("Downloading merged financial info from database.")
+    fin_data <- dplyr::collect(fin_data)
+    logger::log_trace("Download complete.")
+
+    logger::log_trace("Disconnecting from database.")
     DBI::dbDisconnect(factset_db)
 
-
     # return prepared data -----------------------------------------------------
-
-    fin_data
+    return(fin_data)
   }

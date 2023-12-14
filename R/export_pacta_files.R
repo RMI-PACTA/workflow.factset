@@ -71,6 +71,18 @@ export_pacta_files <- function(
 
   # Start Extracting Data
 
+  factset_financial_data_path <- file.path(
+    export_dir,
+    "factset_financial_data.rds"
+  )
+  logger::log_info("Fetching financial data.")
+  financial_data <- get_factset_financial_data(
+    data_timestamp = data_timestamp,
+    ...
+  )
+  logger::log_info("Exporting financial data to {factset_financial_data_path}")
+  saveRDS(object = financial_data, file = factset_financial_data_path)
+
   factset_entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
   logger::log_info("Fetching entity info data.")
   entity_info <- get_factset_entity_info(...)
