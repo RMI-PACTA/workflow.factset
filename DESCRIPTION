@@ -35,6 +35,7 @@ Imports:
     dbplyr,
     dplyr,
     logger,
+    rlang,
     RPostgres,
     withr
 Suggests: 

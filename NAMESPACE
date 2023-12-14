@@ -2,4 +2,7 @@
 
 export(export_pacta_files)
 export(get_factset_entity_info)
+export(get_factset_financial_data)
 importFrom(dplyr,"%>%")
+importFrom(rlang,.data)
+importFrom(rlang,.env)
