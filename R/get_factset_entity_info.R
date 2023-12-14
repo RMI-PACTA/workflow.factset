@@ -17,7 +17,7 @@ get_factset_entity_info <-
     # company_name -------------------------------------------------------------
 
     logger::log_trace("Accessing entity proper names.")
-    factset_entity_id__entity_proper_name <-
+    entity_proper_name <-
       dplyr::tbl(conn, "sym_v1_sym_entity") %>%
       dplyr::select("factset_entity_id", "entity_proper_name")
 
@@ -25,7 +25,7 @@ get_factset_entity_info <-
     # country_of_domicile ------------------------------------------------------
 
     logger::log_trace("Accessing entity country of domicile.")
-    factset_entity_id__iso_country <-
+    iso_country <-
       dplyr::tbl(conn, "sym_v1_sym_entity") %>%
       dplyr::select("factset_entity_id", "iso_country")
 
@@ -33,18 +33,18 @@ get_factset_entity_info <-
     # sector -------------------------------------------------------------------
 
     logger::log_trace("Accessing entity sector.")
-    factset_entity_id__sector_code <-
+    sector_code <-
       dplyr::tbl(conn, "sym_v1_sym_entity_sector") %>%
       dplyr::select("factset_entity_id", "sector_code")
 
-    factset_sector_code__factset_sector_desc <-
+    sector_code__sector_desc <-
       dplyr::tbl(conn, "ref_v2_factset_sector_map") %>%
       dplyr::select(.data$factset_sector_code, .data$factset_sector_desc)
 
-    factset_entity_id__factset_sector_desc <-
-      factset_entity_id__sector_code %>%
+    factset_sector_desc <-
+      sector_code %>%
       dplyr::left_join(
-        factset_sector_code__factset_sector_desc,
+        sector_code__sector_desc,
         by = c("sector_code" = "factset_sector_code")
       ) %>%
       dplyr::select("factset_entity_id", "sector_code", "factset_sector_desc")
@@ -53,18 +53,18 @@ get_factset_entity_info <-
     # sub-sector/industry ------------------------------------------------------
 
     logger::log_trace("Accessing entity industry/sector/subsector.")
-    factset_entity_id__industry_code <-
+    industry_code <-
       dplyr::tbl(conn, "sym_v1_sym_entity_sector") %>%
       dplyr::select("factset_entity_id", "industry_code")
 
-    factset_industry_code_factset_industry_desc <-
+    industry_code__industry_desc <-
       dplyr::tbl(conn, "ref_v2_factset_industry_map") %>%
       dplyr::select("factset_industry_code", "factset_industry_desc")
 
-    factset_entity_id__factset_industry_desc <-
-      factset_entity_id__industry_code %>%
+    factset_industry_desc <-
+      industry_code %>%
       dplyr::left_join(
-        factset_industry_code_factset_industry_desc,
+        industry_code__industry_desc,
         by = c("industry_code" = "factset_industry_code")
       ) %>%
       dplyr::select(
@@ -94,7 +94,7 @@ get_factset_entity_info <-
       ) %>%
       dplyr::pull("begin_time")
 
-    factset_entity_id__credit_parent_id <-
+    credit_parent_id <-
       ent_v1_ent_entity_affiliates %>%
       dplyr::left_join(ref_v2_affiliate_type_map, by = "aff_type_code") %>%
       dplyr::filter(.data$aff_type_desc == "Credit Risk Parent") %>%
@@ -111,21 +111,21 @@ get_factset_entity_info <-
 
     logger::log_trace("Merging entity info.")
     entity_info <-
-      factset_entity_id__entity_proper_name %>%
+      entity_proper_name %>%
       dplyr::left_join(
-        factset_entity_id__iso_country,
+        iso_country,
         by = "factset_entity_id"
       ) %>%
       dplyr::left_join(
-        factset_entity_id__factset_sector_desc,
+        factset_sector_desc,
         by = "factset_entity_id"
       ) %>%
       dplyr::left_join(
-        factset_entity_id__factset_industry_desc,
+        factset_industry_desc,
         by = "factset_entity_id"
       ) %>%
       dplyr::left_join(
-        factset_entity_id__credit_parent_id,
+        credit_parent_id,
         by = "factset_entity_id"
       )
 
