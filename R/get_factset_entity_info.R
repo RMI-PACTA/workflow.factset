@@ -37,10 +37,12 @@ get_factset_entity_info <-
       dplyr::tbl(conn, "sym_v1_sym_entity_sector") %>%
       dplyr::select("factset_entity_id", "sector_code")
 
+    logger::log_trace("Accessing sector descriptions.")
     sector_code__sector_desc <-
       dplyr::tbl(conn, "ref_v2_factset_sector_map") %>%
       dplyr::select(.data$factset_sector_code, .data$factset_sector_desc)
 
+    logger::log_trace("Merging sector codes and sector descriptions.")
     factset_sector_desc <-
       sector_code %>%
       dplyr::left_join(
@@ -52,15 +54,17 @@ get_factset_entity_info <-
 
     # sub-sector/industry ------------------------------------------------------
 
-    logger::log_trace("Accessing entity industry/sector/subsector.")
+    logger::log_trace("Accessing entity industry codes.")
     industry_code <-
       dplyr::tbl(conn, "sym_v1_sym_entity_sector") %>%
       dplyr::select("factset_entity_id", "industry_code")
 
+    logger::log_trace("Accessing industry descriptions")
     industry_code__industry_desc <-
       dplyr::tbl(conn, "ref_v2_factset_industry_map") %>%
       dplyr::select("factset_industry_code", "factset_industry_desc")
 
+    logger::log_trace("Merging industry codes and industry descriptions.")
     factset_industry_desc <-
       industry_code %>%
       dplyr::left_join(
@@ -76,16 +80,19 @@ get_factset_entity_info <-
 
     # credit risk parent -------------------------------------------------------
 
-    logger::log_trace("Accessing entity credit risk parent.")
+    logger::log_trace("Accessing entity affiliates.")
     ent_v1_ent_entity_affiliates <- dplyr::tbl(
       conn,
       "ent_v1_ent_entity_affiliates"
     )
+
+    logger::log_trace("Accessing affiliate type map.")
     ref_v2_affiliate_type_map <- dplyr::tbl(
       conn,
       "ref_v2_affiliate_type_map"
     )
 
+    logger::log_trace("Determining last update time for entity affiliates.")
     ent_entity_affiliates_last_update <-
       dplyr::tbl(conn, "fds_fds_file_history") %>%
       dplyr::filter(.data$table_name == "ent_entity_affiliates") %>%
@@ -94,6 +101,7 @@ get_factset_entity_info <-
       ) %>%
       dplyr::pull("begin_time")
 
+    logger::log_trace("Determining credit risk parent via entity affiliates.")
     credit_parent_id <-
       ent_v1_ent_entity_affiliates %>%
       dplyr::left_join(ref_v2_affiliate_type_map, by = "aff_type_code") %>%
