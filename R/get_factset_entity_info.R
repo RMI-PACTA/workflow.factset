@@ -93,12 +93,13 @@ get_factset_entity_info <-
     )
 
     logger::log_trace("Determining last update time for entity affiliates.")
-    ent_entity_affiliates_last_update <-
+    affiliates_last_update <-
       dplyr::tbl(conn, "fds_fds_file_history") %>%
       dplyr::filter(.data$table_name == "ent_entity_affiliates") %>%
       dplyr::filter(
         .data$begin_time == max(.data$begin_time, na.rm = TRUE)
       ) %>%
+      # pull also handles `collect`ing the data
       dplyr::pull("begin_time")
 
     logger::log_trace("Determining credit risk parent via entity affiliates.")
@@ -111,7 +112,7 @@ get_factset_entity_info <-
         credit_parent_id = "factset_entity_id"
       ) %>%
       dplyr::mutate(
-        ent_entity_affiliates_last_update = .env$ent_entity_affiliates_last_update
+        ent_entity_affiliates_last_update = affiliates_last_update
       )
 
 
