@@ -35,7 +35,10 @@ get_factset_financial_data <-
     # adj_price ----------------------------------------------------------------
 
     browser()
-    logger::log_trace("Accessing share prices.")
+    logger::log_trace(
+      "Accessing share prices. ",
+      "Filtering to date: {data_timestamp}"
+    )
     adj_price <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
       dplyr::filter(.data$price_date == .env$data_timestamp) %>%
@@ -44,7 +47,10 @@ get_factset_financial_data <-
 
     # adj_shares_outstanding ---------------------------------------------------
 
-    logger::log_trace("Accessing shares outstanding.")
+    logger::log_trace(
+      "Accessing shares outstanding. ",
+      "Filtering to date: {data_timestamp}"
+    )
     adj_shares_outstanding <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
       dplyr::filter(.data$price_date == .env$data_timestamp) %>%
