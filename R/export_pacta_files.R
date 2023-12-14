@@ -2,17 +2,17 @@
 #'
 #' @param Destination directory for the output files
 #'
-#' @param ... Arguments to be passed to the `connect_factset_db()` function (for
-#'   specifying database connection parameters)
+#' @param destination path to directory where exported files will be saved
+#' @param data_timestamp filter data as-of this timestamp
 #'
-#' @return NULL
+#' @return vector of paths to exported files
 #'
 #' @export
 
 export_pacta_files <- function(
+  conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
-  data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
-  ...
+  data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time())
 ) {
 
   # Prepare output directories
@@ -77,22 +77,22 @@ export_pacta_files <- function(
   )
   logger::log_info("Fetching financial data.")
   financial_data <- get_factset_financial_data(
-    data_timestamp = data_timestamp,
-    ...
+    conn = conn,
+    data_timestamp = data_timestamp
   )
   logger::log_info("Exporting financial data to {factset_financial_data_path}")
   saveRDS(object = financial_data, file = factset_financial_data_path)
 
   factset_entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
   logger::log_info("Fetching entity info data.")
-  entity_info <- get_factset_entity_info(...)
+  entity_info <- get_factset_entity_info(conn = conn)
   logger::log_info("Exporting entity info data to {factset_entity_info_path}")
   saveRDS(object = entity_info, file = factset_entity_info_path)
 
   logger::log_info("Done with data export.")
   return(
     invisible(
-      list(
+      c(
         factset_entity_info_path = factset_entity_info_path
       )
     )
