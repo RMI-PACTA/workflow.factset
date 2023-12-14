@@ -61,7 +61,7 @@
     "PGUSER": "postgres",
     "containerregistry": "ghcr.io/rmi-pacta",
     "machineCpuCores": 1,
-    "machineMemoryInGB": 4,
+    "machineMemoryInGB": 16,
     "mountPathExport": "/mnt/factset-extracted"
   },
 
