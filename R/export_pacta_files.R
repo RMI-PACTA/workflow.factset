@@ -12,7 +12,11 @@
 export_pacta_files <- function(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
-  data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time())
+  data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  terminate_connection = (
+    # Terminate connection if it was created by this function.
+    deparse(substitute(conn)) == formals(export_pacta_files)[["conn"]]
+  )
 ) {
 
   # Prepare output directories
@@ -90,6 +94,13 @@ export_pacta_files <- function(
   saveRDS(object = entity_info, file = factset_entity_info_path)
 
   logger::log_info("Done with data export.")
+
+  # Terminate connection if needed
+  if (terminate_connection) {
+    logger::log_info("Terminating database connection.")
+    DBI::dbDisconnect(conn)
+  }
+
   return(
     invisible(
       c(
