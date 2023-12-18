@@ -34,7 +34,6 @@ get_factset_financial_data <-
 
     # adj_price ----------------------------------------------------------------
 
-    browser()
     logger::log_trace(
       "Accessing share prices. ",
       "Filtering to date: {data_timestamp}"
