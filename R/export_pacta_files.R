@@ -98,7 +98,7 @@ export_pacta_files <- function(
     "factset_entity_financing_data.rds"
   )
   logger::log_info("Fetching entity financing data.")
-  entity_financing_data <- get_factset_entity_financing_data(
+  entity_financing_data <- get_factset_financing_data(
     conn = conn,
     data_timestamp = data_timestamp
   )
