@@ -5,11 +5,10 @@
 \title{Get the entity info data from the FactSet database and prepare the
 \code{factset_entity_info} tibble}
 \usage{
-get_factset_entity_info(...)
+get_factset_entity_info(conn)
 }
 \arguments{
-\item{...}{Arguments to be passed to the \code{connect_factset_db()} function (for
-specifying database connection parameters)}
+\item{conn}{database connection}
 }
 \value{
 A tibble properly prepared to be saved as the

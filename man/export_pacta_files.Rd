@@ -5,16 +5,22 @@
 \title{Export files for use in PACTA data preparation}
 \usage{
 export_pacta_files(
-  destination = file.path("."),
-  data_timestamp = Sys.time(),
-  ...
+  conn = connect_factset_db(),
+  destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
+  data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  terminate_connection = (deparse(substitute(conn)) ==
+    formals(export_pacta_files)[["conn"]])
 )
 }
 \arguments{
-\item{...}{Arguments to be passed to the \code{connect_factset_db()} function (for
-specifying database connection parameters)}
+\item{destination}{path to directory where exported files will be saved}
+
+\item{data_timestamp}{filter data as-of this timestamp}
 
 \item{Destination}{directory for the output files}
+}
+\value{
+vector of paths to exported files
 }
 \description{
 Export files for use in PACTA data preparation
