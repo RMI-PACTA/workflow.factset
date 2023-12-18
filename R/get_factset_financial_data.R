@@ -11,11 +11,16 @@
 #' @export
 
 get_factset_financial_data <-
-  function(conn, data_timestamp, ...) {
+  function(
+    conn,
+    data_timestamp,
+    data_timestamp_lookback = data_timestamp - lubridate::dmonths(1)
+    ) {
     # build connection to database ---------------------------------------------
 
     logger::log_debug("Extracting financial info from database.")
     logger::log_info("using data timestamp: ", data_timestamp)
+    logger::log_info("Looking back in data to", data_timestamp_lookback)
 
 
     # factset_entity_id -----------------------------------------------
@@ -38,10 +43,19 @@ get_factset_financial_data <-
       "Accessing share prices. ",
       "Filtering to date: {data_timestamp}"
     )
+    # TODO: Optimize this query
     adj_price <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
-      dplyr::filter(.data$price_date == .env$data_timestamp) %>%
+      dplyr::filter(.data$price_date <= .env$data_timestamp) %>%
+      dplyr::group_by(.data$fsym_id, .data$adj_price) %>%
+      dplyr::filter(.data$price_date == max(.data$price_date)) %>%
+      # TODO: CRITICAL: decision: do we want most recent price, or only for
+      # those that have posted in past month?
+      dplyr::filter(
+        .data$price_date >= .env$data_timestamp_lookback
+        ) %>%
       dplyr::select("fsym_id", "adj_price")
+
 
 
     # adj_shares_outstanding ---------------------------------------------------
@@ -52,7 +66,14 @@ get_factset_financial_data <-
     )
     adj_shares_outstanding <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
-      dplyr::filter(.data$price_date == .env$data_timestamp) %>%
+      dplyr::filter(.data$price_date <= .env$data_timestamp) %>%
+      dplyr::group_by(.data$fsym_id, .data$adj_price) %>%
+      dplyr::filter(.data$price_date == max(.data$price_date)) %>%
+      # TODO: CRITICAL: decision: do we want most recent price, or only for
+      # those that have posted in past month?
+      dplyr::filter(
+        .data$price_date >= .env$data_timestamp_lookback
+        ) %>%
       dplyr::select("fsym_id", "adj_shares_outstanding")
 
 
