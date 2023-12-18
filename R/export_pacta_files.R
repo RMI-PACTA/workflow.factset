@@ -75,7 +75,7 @@ export_pacta_files <- function(
 
   # Start Extracting Data
 
-  factset_financial_data_path <- file.path(
+  financial_data_path <- file.path(
     export_dir,
     "factset_financial_data.rds"
   )
@@ -85,13 +85,59 @@ export_pacta_files <- function(
     data_timestamp = data_timestamp
   )
   logger::log_info("Exporting financial data to {factset_financial_data_path}")
-  saveRDS(object = financial_data, file = factset_financial_data_path)
+  saveRDS(object = financial_data, file = financial_data_path)
 
-  factset_entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
+  entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
   logger::log_info("Fetching entity info data.")
   entity_info <- get_factset_entity_info(conn = conn)
   logger::log_info("Exporting entity info data to {factset_entity_info_path}")
-  saveRDS(object = entity_info, file = factset_entity_info_path)
+  saveRDS(object = entity_info, file = entity_info_path)
+
+  entity_financing_data_path <- file.path(
+    export_dir,
+    "factset_entity_financing_data.rds"
+  )
+  logger::log_info("Fetching entity financing data.")
+  entity_financing_data <- get_factset_entity_financing_data(
+    conn = conn,
+    data_timestamp = data_timestamp
+  )
+  logger::log_info(
+    "Exporting entity financing data to {factset_entity_financing_data_path}"
+  )
+  saveRDS(
+    object = entity_financing_data,
+    file = entity_financing_data_path
+  )
+
+  fund_data_path <- file.path(export_dir, "factset_fund_data.rds")
+  logger::log_info("Fetching fund data.")
+  fund_data <- get_factset_fund_data(conn = conn)
+  logger::log_info("Exporting fund data to {factset_fund_data_path}")
+  saveRDS(object = fund_data, file = fund_data_path)
+
+  isin_to_fund_table_path <- file.path(
+    export_dir,
+    "factset_isin_to_fund_table.rds"
+  )
+  logger::log_info("Fetching ISIN to fund table.")
+  isin_to_fund_table <- get_factset_isin_to_fund_table(conn = conn)
+  logger::log_info(
+    "Exporting ISIN to fund table to {factset_isin_to_fund_table_path}"
+  )
+  saveRDS(object = isin_to_fund_table, file = isin_to_fund_table_path)
+
+  iss_emissions_path <- file.path(
+    export_dir,
+    "factset_iss_emissions.rds"
+  )
+  logger::log_info("Fetching ISS emissions data.")
+  iss_emissions <- get_factset_iss_emissions_data(conn = conn)
+  logger::log_info(
+    "Exporting ISS emissions data to {factset_iss_emissions_path}"
+  )
+  saveRDS(object = iss_emissions, file = iss_emissions_path)
+
 
   logger::log_info("Done with data export.")
 
@@ -104,7 +150,12 @@ export_pacta_files <- function(
   return(
     invisible(
       c(
-        factset_entity_info_path = factset_entity_info_path
+        financial_data_path = financial_data_path,
+        entity_info_path = entity_info_path,
+        entity_financing_data_path = entity_financing_data_path,
+        fund_data_path = fund_data_path,
+        isin_to_fund_table_path = isin_to_fund_table_path,
+        iss_emissions_path = iss_emissions_path
       )
     )
   )
