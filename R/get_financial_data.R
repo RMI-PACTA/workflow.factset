@@ -47,7 +47,7 @@ get_financial_data <- function(
   adj_price <-
     dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
     dplyr::filter(.data$price_date <= .env$data_timestamp) %>%
-    dplyr::group_by(.data$fsym_id, .data$adj_price) %>%
+    dplyr::group_by(.data$fsym_id) %>%
     dplyr::filter(.data$price_date == max(.data$price_date)) %>%
     # TODO: CRITICAL: decision: do we want most recent price, or only for
     # those that have posted in past month?
@@ -66,7 +66,7 @@ get_financial_data <- function(
   adj_shares_outstanding <-
     dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
     dplyr::filter(.data$price_date <= .env$data_timestamp) %>%
-    dplyr::group_by(.data$fsym_id, .data$adj_price) %>%
+    dplyr::group_by(.data$fsym_id) %>%
     dplyr::filter(.data$price_date == max(.data$price_date)) %>%
     # TODO: CRITICAL: decision: do we want most recent price, or only for
     # those that have posted in past month?
