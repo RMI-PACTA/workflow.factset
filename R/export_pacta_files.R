@@ -23,7 +23,9 @@ export_pacta_files <- function(
 
   if (!dir.exists(destination)) {
     logger::log_error(
-      "The destination directory {destination} does not exist."
+      "The destination directory ",
+      destination,
+      " does not exist."
     )
     stop("Destination directory does not exist.")
   }
@@ -84,13 +86,13 @@ export_pacta_files <- function(
     conn = conn,
     data_timestamp = data_timestamp
   )
-  logger::log_info("Exporting financial data to {factset_financial_data_path}")
+  logger::log_info("Exporting financial data to ", financial_data_path)
   saveRDS(object = financial_data, file = financial_data_path)
 
   entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
   logger::log_info("Fetching entity info data.")
   entity_info <- get_entity_info(conn = conn)
-  logger::log_info("Exporting entity info data to {factset_entity_info_path}")
+  logger::log_info("Exporting entity info data to ", entity_info_path)
   saveRDS(object = entity_info, file = entity_info_path)
 
   entity_financing_data_path <- file.path(
@@ -103,7 +105,7 @@ export_pacta_files <- function(
     data_timestamp = data_timestamp
   )
   logger::log_info(
-    "Exporting entity financing data to {factset_entity_financing_data_path}"
+    "Exporting entity financing data to ", entity_financing_data_path
   )
   saveRDS(
     object = entity_financing_data,
@@ -113,7 +115,7 @@ export_pacta_files <- function(
   fund_data_path <- file.path(export_dir, "factset_fund_data.rds")
   logger::log_info("Fetching fund data.")
   fund_data <- get_fund_data(conn = conn)
-  logger::log_info("Exporting fund data to {factset_fund_data_path}")
+  logger::log_info("Exporting fund data to ", fund_data_path)
   saveRDS(object = fund_data, file = fund_data_path)
 
   isin_to_fund_table_path <- file.path(
@@ -123,7 +125,7 @@ export_pacta_files <- function(
   logger::log_info("Fetching ISIN to fund table.")
   isin_to_fund_table <- get_isin_to_fund_table(conn = conn)
   logger::log_info(
-    "Exporting ISIN to fund table to {factset_isin_to_fund_table_path}"
+    "Exporting ISIN to fund table to ", isin_to_fund_table_path
   )
   saveRDS(object = isin_to_fund_table, file = isin_to_fund_table_path)
 
@@ -134,7 +136,7 @@ export_pacta_files <- function(
   logger::log_info("Fetching ISS emissions data.")
   iss_emissions <- get_iss_emissions_data(conn = conn)
   logger::log_info(
-    "Exporting ISS emissions data to {factset_iss_emissions_path}"
+    "Exporting ISS emissions data to ", iss_emissions_path
   )
   saveRDS(object = iss_emissions, file = iss_emissions_path)
 

@@ -24,6 +24,7 @@ get_iss_emissions_data <- function(
   # convert `year` to date ---------------------------------------------------
   sql_filter_date <- as.Date(paste0(reporting_year, "-01-01"), "%Y-%m-%d")
 
+  logger::log_trace("Accessing ICC identifiers.")
   # get the relevant fsym_id to factset_entity_id table ----------------------
   fsym_id__factset_entity_id <-
     dplyr::tbl(conn, "icc_v2_icc_sec_entity_hist") %>%
@@ -41,6 +42,7 @@ get_iss_emissions_data <- function(
 
   # get the relevant icc_security_id to factset_entity_id table --------------
 
+  logger::log_trace("Accessing ICC security info.")
   icc_security_id <-
     dplyr::tbl(conn, "icc_v2_icc_factset_id_map") %>%
     dplyr::filter(.data$provider_id_type == "icc_security_id") %>%
@@ -63,6 +65,7 @@ get_iss_emissions_data <- function(
 
   # get the factset_entity_id to icc_total_emissions data --------------------
 
+  logger::log_trace("Accessing ICC emissions data.")
   icc_total_emissions <-
     dplyr::tbl(conn, "icc_v2_icc_carbon_climate_core") %>%
     dplyr::filter(.data$icc_emissions_fiscal_year == .env$reporting_year) %>%
