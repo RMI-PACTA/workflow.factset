@@ -18,7 +18,7 @@ get_fund_data <- function(conn, data_timestamp) {
 
   logger::log_trace(
     "Accessing historical fund holdings - security level. ",
-    "Filtering to date: {data_timestamp}"
+    "Filtering to date: ", data_timestamp
   )
   fund_security <-
     dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
@@ -31,7 +31,7 @@ get_fund_data <- function(conn, data_timestamp) {
 
   logger::log_trace(
     "Accessing historical fund holdings - non-securities. ",
-    "Filtering to date: {data_timestamp}"
+    "Filtering to date: ", data_timestamp
   )
   fund_nonsecurity <-
     dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
@@ -56,7 +56,7 @@ get_fund_data <- function(conn, data_timestamp) {
 
   logger::log_trace(
     "Accessing historical fund filings.",
-    "Filtering to date: {data_timestamp}"
+    "Filtering to date: ", data_timestamp
   )
   fund_mv <-
     dplyr::tbl(conn, "own_v5_own_ent_fund_filing_hist") %>%
@@ -64,9 +64,7 @@ get_fund_data <- function(conn, data_timestamp) {
     dplyr::select("factset_fund_id", "total_reported_mv")
 
 
-  logger::log_trace(
-    "Accessing current ISIN mappings.",
-  )
+  logger::log_trace("Accessing current ISIN mappings.")
   # symbology containing the ISIN to fsym_id link
   fsym_id__isin <-
     dplyr::tbl(conn, "sym_v1_sym_isin")

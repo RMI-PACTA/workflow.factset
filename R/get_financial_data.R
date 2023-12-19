@@ -36,7 +36,7 @@ get_financial_data <-
 
     logger::log_trace(
       "Accessing share prices. ",
-      "Filtering to date: {data_timestamp}"
+      "Filtering to date: ", data_timestamp
     )
     adj_price <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
@@ -48,7 +48,7 @@ get_financial_data <-
 
     logger::log_trace(
       "Accessing shares outstanding. ",
-      "Filtering to date: {data_timestamp}"
+      "Filtering to date: ", data_timestamp
     )
     adj_shares_outstanding <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%

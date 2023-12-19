@@ -37,7 +37,15 @@ connect_factset_db <- function(
   }
 
   logger::log_trace(
-    "Connecting to database {dbname} on {host}:{port} as {username}"
+    "Connecting to database ",
+    dbname,
+    " on ",
+    host,
+    ":",
+    port,
+    " as ",
+    username,
+    ""
   )
   conn <-
     DBI::dbConnect(
