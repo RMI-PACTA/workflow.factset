@@ -8,7 +8,7 @@
 #'
 #' @export
 
-get_factset_isin_to_fund_table <- function(conn) {
+get_isin_to_fund_table <- function(conn) {
   # get the ISIN to fsym_id table --------------------------------------------
 
   logger::info("Getting ISIN to fsym_id mapping")

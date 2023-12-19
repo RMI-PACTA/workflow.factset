@@ -80,7 +80,7 @@ export_pacta_files <- function(
     "factset_financial_data.rds"
   )
   logger::log_info("Fetching financial data.")
-  financial_data <- get_factset_financial_data(
+  financial_data <- get_financial_data(
     conn = conn,
     data_timestamp = data_timestamp
   )
@@ -89,7 +89,7 @@ export_pacta_files <- function(
 
   entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
   logger::log_info("Fetching entity info data.")
-  entity_info <- get_factset_entity_info(conn = conn)
+  entity_info <- get_entity_info(conn = conn)
   logger::log_info("Exporting entity info data to {factset_entity_info_path}")
   saveRDS(object = entity_info, file = entity_info_path)
 
@@ -98,7 +98,7 @@ export_pacta_files <- function(
     "factset_entity_financing_data.rds"
   )
   logger::log_info("Fetching entity financing data.")
-  entity_financing_data <- get_factset_financing_data(
+  entity_financing_data <- get_entity_financing_data(
     conn = conn,
     data_timestamp = data_timestamp
   )
@@ -112,7 +112,7 @@ export_pacta_files <- function(
 
   fund_data_path <- file.path(export_dir, "factset_fund_data.rds")
   logger::log_info("Fetching fund data.")
-  fund_data <- get_factset_fund_data(conn = conn)
+  fund_data <- get_fund_data(conn = conn)
   logger::log_info("Exporting fund data to {factset_fund_data_path}")
   saveRDS(object = fund_data, file = fund_data_path)
 
@@ -121,7 +121,7 @@ export_pacta_files <- function(
     "factset_isin_to_fund_table.rds"
   )
   logger::log_info("Fetching ISIN to fund table.")
-  isin_to_fund_table <- get_factset_isin_to_fund_table(conn = conn)
+  isin_to_fund_table <- get_isin_to_fund_table(conn = conn)
   logger::log_info(
     "Exporting ISIN to fund table to {factset_isin_to_fund_table_path}"
   )
@@ -132,7 +132,7 @@ export_pacta_files <- function(
     "factset_iss_emissions.rds"
   )
   logger::log_info("Fetching ISS emissions data.")
-  iss_emissions <- get_factset_iss_emissions_data(conn = conn)
+  iss_emissions <- get_iss_emissions_data(conn = conn)
   logger::log_info(
     "Exporting ISS emissions data to {factset_iss_emissions_path}"
   )

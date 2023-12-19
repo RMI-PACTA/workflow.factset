@@ -8,7 +8,7 @@
 #'
 #' @export
 
-get_factset_entity_info <-
+get_entity_info <-
   function(conn) {
     # build connection to database ---------------------------------------------
 

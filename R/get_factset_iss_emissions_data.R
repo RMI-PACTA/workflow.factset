@@ -15,7 +15,7 @@
 #'
 #' @export
 
-get_factset_iss_emissions_data <- function(
+get_iss_emissions_data <- function(
   conn,
   reporting_year,
   min_estimated_trust = 0.0,

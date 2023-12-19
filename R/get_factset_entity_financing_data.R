@@ -10,7 +10,7 @@
 #'
 #' @export
 
-get_factset_financing_data <- function(
+get_entity_financing_data <- function(
   conn,
   data_timestamp
 ) {

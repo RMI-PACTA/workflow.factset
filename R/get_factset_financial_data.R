@@ -10,7 +10,7 @@
 #'
 #' @export
 
-get_factset_financial_data <-
+get_financial_data <-
   function(conn, data_timestamp, ...) {
     # build connection to database ---------------------------------------------
 
