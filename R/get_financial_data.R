@@ -4,6 +4,8 @@
 #' @param conn databse connection
 #' @param data_timestamp A single string specifying the desired date for the
 #'   data in the form "2021-12-31"
+#' @param data_timestamp_lookback A single string specifying the oldest data
+#' that should be included in the output
 #'
 #' @return A tibble properly prepared to be saved as the
 #'   `factset_financial_data.rds` output file
