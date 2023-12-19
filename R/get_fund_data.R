@@ -4,17 +4,24 @@
 #' @param conn databse connection
 #' @param data_timestamp A single string specifying the desired date for the
 #'   data in the form "2021-12-31"
+#' @param data_timestamp_lookback A single string specifying the oldest data
+#' that should be included in the output
 #'
 #' @return A tibble properly prepared to be saved as the `factset_fund_data.rds`
 #'   output file
 #'
 #' @export
 
-get_fund_data <- function(conn, data_timestamp) {
+get_fund_data <- function(
+  conn,
+  data_timestamp,
+  data_timestamp_lookback = data_timestamp - lubridate::dmonths(1)
+) {
   # get the fund holdings and the holdings' reported market value ------------
 
   logger::log_debug("Extracting financial info from database.")
-  logger::log_info("using data timestamp: ", data_timestamp)
+  logger::log_debug("using data timestamp: ", data_timestamp)
+  logger::log_debug("Looking back in data to: ", data_timestamp_lookback)
 
   logger::log_trace(
     "Accessing historical fund holdings - security level. ",
@@ -22,7 +29,14 @@ get_fund_data <- function(conn, data_timestamp) {
   )
   fund_security <-
     dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
-    dplyr::filter(.data$report_date == .env$data_timestamp) %>%
+    dplyr::filter(.data$report_date <= .env$data_timestamp) %>%
+    dplyr::group_by(.data$fsym_id, .data$factset_fund_id) %>%
+    dplyr::filter(.data$price_date == max(.data$price_date)) %>%
+    # TODO: CRITICAL: decision: do we want most recent price, or only for
+    # those that have posted in past month?
+    dplyr::filter(
+      .data$price_date >= .env$data_timestamp_lookback
+    ) %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
       holding_fsym_id = "fsym_id",
@@ -35,7 +49,14 @@ get_fund_data <- function(conn, data_timestamp) {
   )
   fund_nonsecurity <-
     dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
-    dplyr::filter(.data$report_date == .env$data_timestamp) %>%
+    dplyr::filter(.data$report_date <= .env$data_timestamp) %>%
+    dplyr::group_by(.data$fsym_id, .data$generic_id) %>%
+    dplyr::filter(.data$price_date == max(.data$price_date)) %>%
+    # TODO: CRITICAL: decision: do we want most recent price, or only for
+    # those that have posted in past month?
+    dplyr::filter(
+      .data$price_date >= .env$data_timestamp_lookback
+    ) %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
       holding_fsym_id = "generic_id",
