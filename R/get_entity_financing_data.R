@@ -15,7 +15,7 @@
 get_entity_financing_data <- function(
   conn,
   data_timestamp,
-    data_timestamp_lookback = data_timestamp - lubridate::dyears(1)
+  data_timestamp_lookback = data_timestamp - lubridate::dyears(1)
 ) {
   # get fsym_id to fundamentals fsym_company_id --------------------------------
 
@@ -77,7 +77,7 @@ get_entity_financing_data <- function(
     dplyr::inner_join(sec_entity, by = c("fsym_company_id" = "fsym_id")) %>%
     dplyr::filter(!(is.na(.data$ff_mkt_val) & is.na(.data$ff_debt))) %>%
     dplyr::filter(.data$date <= .env$data_timestamp) %>%
-    dplyr::filter(.data$date >= .env$data_timestamp_loockback) %>%
+    dplyr::filter(.data$date >= .env$data_timestamp_lookback) %>%
     dplyr::filter(
       lubridate::year(.data$date) == lubridate::year(data_timestamp)
     ) %>%
