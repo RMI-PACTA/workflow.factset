@@ -13,6 +13,7 @@ export_pacta_files <- function(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  create_tar = TRUE,
   terminate_connection = (
     # Terminate connection if it was created by this function.
     deparse(substitute(conn)) == formals(export_pacta_files)[["conn"]]
@@ -68,12 +69,51 @@ export_pacta_files <- function(
 
   export_dir <- file.path(
     destination,
-    paste0("timestamp", data_timestamp_chr, "_pulled", start_time_chr)
+    paste0(
+      "factset-pacta", "_",
+      "timestamp-", data_timestamp_chr, "_",
+      "pulled-", start_time_chr
+    )
   )
 
   if (!dir.exists(export_dir)) {
     dir.create(export_dir, recursive = TRUE)
   }
+
+  # Export metadata
+  metadata_path <- file.path(export_dir, "metadata.json")
+  logger::log_info("Exporting metadata to ", metadata_path)
+  logger::log_debug("Collecting metadata.")
+  metadata <- Sys.getenv(
+    c(
+      "DATA_TIMESTAMP",
+      "DEPLOY_START_TIME",
+      "EXPORT_DESTINATION",
+      "HOSTNAME",
+      "LOG_LEVEL",
+      "MACHINE_CORES",
+      "PGDATABASE",
+      "PGHOST",
+      "PGUSER"
+    )
+  )
+  metadata_json <- character()
+  for (i in seq_along(metadata)) {
+    metadata_json[[i]] <- paste0(
+      '  "',
+      names(metadata)[i],
+      '": "',
+      metadata[[i]],
+      '"'
+    )
+  }
+  metadata_string <- paste0(
+    "{\n",
+    paste(metadata_json, collapse = ",\n"),
+    "\n}"
+  )
+  logger::log_debug("Writing metadata to file: ", metadata_path)
+  writeLines(metadata_string, metadata_path)
 
   # Start Extracting Data
 
@@ -153,6 +193,29 @@ export_pacta_files <- function(
   if (terminate_connection) {
     logger::log_info("Terminating database connection.")
     DBI::dbDisconnect(conn)
+  }
+
+  # Create tar file if requested
+  if (create_tar) {
+    logger::log_debug("Creating tar file.")
+    tar_file_path <- file.path(
+      export_dir,
+      paste0(basename(export_dir), ".tar.gz")
+    )
+    system2(
+      command = "tar",
+      args = c(
+        "--create",
+        "--exclude-backups",
+        "--exclude-vcs",
+        "--gzip",
+        "--verbose",
+        "-C", dirname(export_dir),
+        paste0("--file=", tar_file_path),
+        basename(export_dir)
+      )
+    )
+    logger::log_info("Tar file created at ", tar_file_path)
   }
 
   return(
