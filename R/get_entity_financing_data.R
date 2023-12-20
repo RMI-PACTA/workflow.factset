@@ -63,6 +63,7 @@ get_entity_financing_data <- function(
 
   # merge and collect the data, then disconnect --------------------------------
 
+  data_timestamp_year <- lubridate::year(data_timestamp)
   logger::log_trace("Merging entity financing data.")
   entity_financing_data <- ff_mkt_val %>%
     dplyr::full_join(
@@ -75,7 +76,7 @@ get_entity_financing_data <- function(
     dplyr::group_by(.data$fsym_id, .data$currency) %>%
     dplyr::filter(.data$date <= .env$data_timestamp) %>%
     dplyr::filter(
-      lubridate::year(.data$date) == lubridate::year(data_timestamp)
+      lubridate::year(.data$date) == data_timestamp_year
     ) %>%
     dplyr::filter(.data$date == max(.data$date)) %>%
     dplyr::ungroup()
