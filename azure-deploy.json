@@ -3,11 +3,22 @@
   "contentVersion": "0.0.0.5",
 
   "parameters": {
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
+    "PGPASSWORD": {
+      "type": "securestring",
       "metadata": {
-        "description": "Location for all resources."
+        "description": "password to connect to database"
+      }
+    },
+    "containerGroupName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the container group."
+      }
+    },
+    "dataTimestamp": {
+      "type": "string",
+      "metadata": {
+        "description": "The time to start the container group."
       }
     },
     "identity": {
@@ -16,10 +27,51 @@
         "description": "The ID of the user assigned identity to use for the container group."
       }
     },
-    "containerGroupName": {
+    "imageTagLoader": {
       "type": "string",
+      "defaultValue": "main",
       "metadata": {
-        "description": "The name of the container group."
+        "description": "Image tag for the loader container."
+      }
+    },
+    "imageTagWorkflow": {
+      "type": "string",
+      "defaultValue": "main",
+      "metadata": {
+        "description": "Image tag for the workflow container."
+      }
+    },
+    "loaderDBBackup": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": {
+        "description": "Backup the database to a file."
+      }
+    },
+    "loaderDBRestore": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": {
+        "description": "Restore the database from a backup."
+      }
+    },
+    "loaderFactsetSerial": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Serial Number provided by FactSet"
+      }
+    },
+    "loaderFactsetUsername": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Username provided by FactSet"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
       }
     },
     "restartPolicy": {
@@ -34,7 +86,14 @@
         "description": "The behavior of Azure runtime if container has stopped."
       }
     },
-    "rawdata-storageaccountkey": {
+    "starttime": {
+      "type": "string",
+      "defaultValue": "[utcNow()]",
+      "metadata": {
+        "description": "The time to start the container group."
+      }
+    },
+    "storageAccountKeyRawdata": {
       "type": "securestring",
       "metadata": {
         "description": "The storage account key for the rawdata storage account."
@@ -45,65 +104,6 @@
       "defaultValue": true,
       "metadata": {
         "description": "Deploy Database and FDSLoader image to update the database."
-      }
-    },
-    "factset-serial": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Serial Number provided by FactSet"
-      }
-    },
-    "factset-username": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Username provided by FactSet"
-      }
-    },
-    "backupDB": {
-      "type": "string",
-      "defaultValue": "1",
-      "metadata": {
-        "description": "Backup the database to a file."
-      }
-    },
-    "restoreDB": {
-      "type": "string",
-      "defaultValue": "1",
-      "metadata": {
-        "description": "Restore the database from a backup."
-      }
-    },
-    "workflowImageTag": {
-      "type": "string",
-      "defaultValue": "main",
-      "metadata": {
-        "description": "Image tag for the workflow container."
-      }
-    },
-    "loaderImageTag": {
-      "type": "string",
-      "defaultValue": "main",
-      "metadata": {
-        "description": "Image tag for the loader container."
-      }
-    },
-    "database-password": {
-      "type": "securestring",
-      "metadata": {
-        "description": "password to connect to database"
-      }
-    },
-    "dataTimestamp": {
-      "type": "string",
-      "metadata": {
-        "description": "The time to start the container group."
-      }
-    },
-    "starttime": {
-      "type": "string",
-      "defaultValue": "[utcNow()]",
-      "metadata": {
-        "description": "The time to start the container group."
       }
     }
   },
@@ -133,15 +133,15 @@
       {
         "name": "loader-runner",
         "properties": {
-          "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('loaderImageTag'))]",
+          "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
           "environmentVariables": [
             {
               "name": "RESTORE_DB",
-              "value": "[parameters('restoreDB')]"
+              "value": "[parameters('loaderDBRestore')]"
             },
             {
               "name": "BACKUP_DB",
-              "value": "[parameters('backupDB')]"
+              "value": "[parameters('loaderDBBackup')]"
             },
             {
               "name": "PGUSER",
@@ -149,7 +149,7 @@
             },
             {
               "name": "PGPASSWORD",
-              "secureValue": "[parameters('database-password')]"
+              "secureValue": "[parameters('PGPASSWORD')]"
             },
             {
               "name": "PGHOST",
@@ -161,11 +161,11 @@
             },
             {
               "name": "FACTSET_USER",
-              "value": "[parameters('factset-username')]"
+              "value": "[parameters('loaderFactsetUsername')]"
             },
             {
               "name": "FACTSET_SERIAL",
-              "secureValue": "[parameters('factset-serial')]"
+              "secureValue": "[parameters('loaderFactsetSerial')]"
             },
             {
               "name": "KEY_FILENAME",
@@ -237,7 +237,7 @@
           {
             "name": "workflow-factset",
             "properties": {
-              "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('workflowImageTag'))]",
+              "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
               "ports": [],
               "resources": {
                 "requests": {
@@ -252,7 +252,7 @@
                 },
                 {
                   "name": "PGPASSWORD",
-                  "secureValue": "[parameters('database-password')]"
+                  "secureValue": "[parameters('PGPASSWORD')]"
                 },
                 {
                   "name": "PGHOST",
@@ -301,7 +301,7 @@
               "shareName": "factset-extracted",
               "readOnly": false,
               "storageAccountName": "pactarawdata",
-              "storageAccountKey": "[parameters('rawdata-storageaccountkey')]"
+              "storageAccountKey": "[parameters('storageAccountKeyRawdata')]"
             }
           },
           {
@@ -314,7 +314,7 @@
               "shareName": "factset-loader",
               "readOnly": false,
               "storageAccountName": "pactarawdata",
-              "storageAccountKey": "[parameters('rawdata-storageaccountkey')]"
+              "storageAccountKey": "[parameters('storageAccountKeyRawdata')]"
             }
           }
         ],
@@ -337,7 +337,7 @@
       "properties": {
         "version": "[variables('postgresVersion')]",
         "administratorLogin": "[variables('PGUSER')]",
-        "administratorLoginPassword": "[parameters('database-password')]",
+        "administratorLoginPassword": "[parameters('PGPASSWORD')]",
         "network": {
           "delegatedSubnetResourceId": "[json('null')]",
           "privateDnsZoneArmResourceId": "[json('null')]"
