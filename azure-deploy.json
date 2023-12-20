@@ -134,13 +134,6 @@
         "name": "loader-runner",
         "properties": {
           "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('loaderImageTag'))]",
-          "ports": [],
-          "resources": {
-            "requests": {
-              "cpu": "[variables('machineCpuCores')]",
-              "memoryInGB": "[variables('machineMemoryInGB')]"
-            }
-          },
           "environmentVariables": [
             {
               "name": "RESTORE_DB",
