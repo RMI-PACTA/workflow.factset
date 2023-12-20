@@ -13,6 +13,7 @@ export_pacta_files <- function(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  create_tar = TRUE,
   terminate_connection = (
     # Terminate connection if it was created by this function.
     deparse(substitute(conn)) == formals(export_pacta_files)[["conn"]]
@@ -192,6 +193,29 @@ export_pacta_files <- function(
   if (terminate_connection) {
     logger::log_info("Terminating database connection.")
     DBI::dbDisconnect(conn)
+  }
+
+  # Create tar file if requested
+  if (create_tar) {
+    logger::log_debug("Creating tar file.")
+    tar_file_path <- file.path(
+      export_dir,
+      paste0(basename(export_dir), ".tar.gz")
+    )
+    system2(
+      command = "tar",
+      args = c(
+        "--create",
+        "--exclude-backups",
+        "--exclude-vcs",
+        "--gzip",
+        "--verbose",
+        "-C", dirname(export_dir),
+        paste0("--file=", tar_file_path),
+        basename(export_dir)
+      )
+    )
+    logger::log_info("Tar file created at ", tar_file_path)
   }
 
   return(
