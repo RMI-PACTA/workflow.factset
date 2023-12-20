@@ -39,7 +39,7 @@ export_pacta_files <- function(
 
   start_time_chr <- Sys.getenv(
     "DEPLOY_START_TIME",
-    format(Sys.time(), format = "%Y%m%dT%H%M%S", tz = "UTC"),
+    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC"),
   )
 
   if (inherits(data_timestamp, "character")) {
@@ -114,7 +114,10 @@ export_pacta_files <- function(
 
   fund_data_path <- file.path(export_dir, "factset_fund_data.rds")
   logger::log_info("Fetching fund data.")
-  fund_data <- get_fund_data(conn = conn)
+  fund_data <- get_fund_data(
+    conn = conn,
+    data_timestamp = data_timestamp
+  )
   logger::log_info("Exporting fund data to ", fund_data_path)
   saveRDS(object = fund_data, file = fund_data_path)
 
