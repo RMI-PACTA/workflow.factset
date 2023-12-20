@@ -46,6 +46,12 @@
         "description": "password to connect to database"
       }
     },
+    "dataTimestamp": {
+      "type": "string",
+      "metadata": {
+        "description": "The time to start the container group."
+      }
+    },
     "starttime": {
       "type": "string",
       "defaultValue": "[utcNow()]",
@@ -57,7 +63,7 @@
 
   "variables": {
     "PGDATABASE": "FDS",
-    "PGHOST": "[concat('factset-01-postgres', '.postgres.database.azure.com')]",
+    "PGHOST": "[concat('factset-foo-postgres', '.postgres.database.azure.com')]",
     "PGUSER": "postgres",
     "containerregistry": "ghcr.io/rmi-pacta",
     "machineCpuCores": 1,
@@ -82,9 +88,9 @@
       "properties": {
         "containers": [
           {
-            "name": "loader-runner",
+            "name": "workflow-factset",
             "properties": {
-              "image": "[concat(variables('containerregistry'),'/workflow.factset:pr1')]",
+              "image": "[concat(variables('containerregistry'),'/workflow.factset:main')]",
               "ports": [],
               "resources": {
                 "requests": {
@@ -127,7 +133,7 @@
                 },
                                 {
                   "name": "DATA_TIMESTAMP",
-                  "value": "20230123"
+                  "value": "[parameters('dataTimestamp')]"
                 }
 
               ],
