@@ -54,7 +54,7 @@ export_pacta_files <- function(
   if (inherits(data_timestamp, "POSIXct")) {
     data_timestamp_chr <- format(
       data_timestamp,
-      format = "%Y%m%dT%H%M%S",
+      format = "%Y%m%dT%H%M%SZ",
       tz = "UTC"
     )
   } else {
@@ -68,7 +68,7 @@ export_pacta_files <- function(
 
   export_dir <- file.path(
     destination,
-    paste0(data_timestamp_chr, "_pulled", start_time_chr)
+    paste0("timestamp", data_timestamp_chr, "_pulled", start_time_chr)
   )
 
   if (!dir.exists(export_dir)) {
