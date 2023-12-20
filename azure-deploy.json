@@ -231,6 +231,9 @@
           "[parameters('identity')]": {}
         }
       },
+      "dependsOn": [
+        "[if(parameters('updateDB'), resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName')), '')]"
+      ],
       "properties": {
         "initContainers": "[if(parameters('updateDB'), variables('initContainers'), variables('emptyArray'))]",
         "containers": [
@@ -317,9 +320,6 @@
               "storageAccountKey": "[parameters('storageAccountKeyRawdata')]"
             }
           }
-        ],
-        "dependsOn": [
-          "[if(parameters('updateDB'), resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName')), '')]"
         ]
       }
     },
