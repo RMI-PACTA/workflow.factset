@@ -79,6 +79,41 @@ export_pacta_files <- function(
     dir.create(export_dir, recursive = TRUE)
   }
 
+  # Export metadata
+  metadata_path <- file.path(export_dir, "metadata.json")
+  logger::log_info("Exporting metadata to ", metadata_path)
+  logger::log_debug("Collecting metadata.")
+  metadata <- Sys.getenv(
+    c(
+      "DATA_TIMESTAMP",
+      "DEPLOY_START_TIME",
+      "EXPORT_DESTINATION",
+      "HOSTNAME",
+      "LOG_LEVEL",
+      "MACHINE_CORES",
+      "PGDATABASE",
+      "PGHOST",
+      "PGUSER"
+    )
+  )
+  metadata_json <- character()
+  for (i in seq_along(metadata)) {
+    metadata_json[[i]] <- paste0(
+      '  "',
+      names(metadata)[i],
+      '": "',
+      metadata[[i]],
+      '"'
+    )
+  }
+  metadata_string <- paste0(
+    "{\n",
+    paste(metadata_json, collapse = ",\n"),
+    "\n}"
+  )
+  logger::log_debug("Writing metadata to file: ", metadata_path)
+  writeLines(metadata_string, metadata_path)
+
   # Start Extracting Data
 
   financial_data_path <- file.path(
