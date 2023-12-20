@@ -69,13 +69,25 @@
   },
 
   "variables": {
+
+    "FDSLoaderZipFilename": "FDSLoader-Linux-2.13.6.0.zip",
     "PGDATABASE": "FDS",
-    "PGHOST": "[concat('factset-foo-postgres', '.postgres.database.azure.com')]",
+    "PGHOST": "[concat(variables('dbServerName'), '.postgres.database.azure.com')]",
     "PGUSER": "postgres",
     "containerregistry": "ghcr.io/rmi-pacta",
-    "machineCpuCores": 1,
+    "dbAvailabilityZone": "1",
+    "dbHAMode":"Disabled",
+    "dbInstanceType": "Standard_D2ds_v4",
+    "dbServerEdition": "GeneralPurpose",
+    "dbServerName": "[concat(parameters('containerGroupName'), '-postgres')]",
+    "dbSkuSizeGB": 256,
+    "machineCpuCores": 2,
     "machineMemoryInGB": 16,
     "mountPathExport": "/mnt/factset-extracted",
+    "mountPathFDSLoader": "/mnt/factset-loader",
+    "mountPathWorkingSpace": "/mnt/workingspace",
+    "postgresVersion": "14",
+
     "emptyArray": [],
     "initContainers": [
       {
@@ -184,6 +196,62 @@
           }
         ]
       }
+    },
+
+    {
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+      "condition": "[parameters('updateDB')]",
+      "apiVersion": "2021-06-01",
+      "name": "[variables('dbServerName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "[variables('dbInstanceType')]",
+        "tier": "[variables('dbServerEdition')]"
+      },
+      "properties": {
+        "version": "[variables('postgresVersion')]",
+        "administratorLogin": "[variables('PGUSER')]",
+        "administratorLoginPassword": "[parameters('database-password')]",
+        "network": {
+          "delegatedSubnetResourceId": "[json('null')]",
+          "privateDnsZoneArmResourceId": "[json('null')]"
+        },
+        "highAvailability": {
+          "mode": "[variables('dbHAMode')]"
+        },
+        "storage": {
+          "autoGrow": "Enabled",
+          "storageSizeGB": "[variables('dbSkuSizeGB')]"
+        },
+        "backup": {
+          "backupRetentionDays": 7,
+          "geoRedundantBackup": "Disabled"
+        },
+        "availabilityZone": "[variables('dbAvailabilityZone')]"
+      }
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers/firewallRules",
+      "condition": "[parameters('updateDB')]",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', variables('dbServerName'), 'AllowAllWindowsAzureIps')]",
+      "properties": {
+        "endIpAddress": "0.0.0.0",
+        "startIpAddress": "0.0.0.0"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.DBforPostgreSQL/flexibleServers/databases",
+      "condition": "[parameters('updateDB')]",
+      "apiVersion": "2021-06-01",
+      "name": "[format('{0}/{1}', variables('dbServerName'), variables('PGDATABASE'))]",
+      "properties": {},
+      "dependsOn": [
+        "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName'))]"
+      ]
     }
   ],
   "outputs": {}
