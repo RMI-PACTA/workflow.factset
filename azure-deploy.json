@@ -40,6 +40,13 @@
         "description": "The storage account key for the rawdata storage account."
       }
     },
+    "updateDB": {
+      "type": "bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Deploy Database and FDSLoader image to update the database."
+      }
+    },
     "database-password": {
       "type": "securestring",
       "metadata": {
@@ -68,12 +75,29 @@
     "containerregistry": "ghcr.io/rmi-pacta",
     "machineCpuCores": 1,
     "machineMemoryInGB": 16,
-    "mountPathExport": "/mnt/factset-extracted"
+    "mountPathExport": "/mnt/factset-extracted",
+    "emptyArray": [],
+    "initContainers": [
+      {
+        "name": "string",
+        "properties": {
+          "environmentVariables": [
+            {
+              "name": "FOO",
+              "value": "bar"
+            }
+          ],
+          "image": "hello-world"
+        }
+      }
+    ]
+        
   },
 
   "functions": [],
 
   "resources": [
+
     {
       "type": "Microsoft.ContainerInstance/containerGroups",
       "apiVersion": "2021-09-01",
@@ -86,20 +110,7 @@
         }
       },
       "properties": {
-        "initContainers": [
-          {
-            "name": "string",
-            "properties": {
-              "environmentVariables": [
-                {
-                  "name": "FOO",
-                  "value": "bar"
-                }
-              ],
-              "image": "hello-world"
-            }
-          }
-        ],
+        "initContainers": "[if(parameters('updateDB'), variables('initContainers'), variables('emptyArray'))]",
         "containers": [
           {
             "name": "workflow-factset",
@@ -149,7 +160,6 @@
                   "name": "DATA_TIMESTAMP",
                   "value": "[parameters('dataTimestamp')]"
                 }
-
               ],
               "volumeMounts": [
                 {
