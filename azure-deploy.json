@@ -86,6 +86,20 @@
         }
       },
       "properties": {
+        "initContainers": [
+          {
+            "name": "string",
+            "properties": {
+              "environmentVariables": [
+                {
+                  "name": "FOO",
+                  "value": "bar"
+                }
+              ],
+              "image": "hello-world"
+            }
+          }
+        ],
         "containers": [
           {
             "name": "workflow-factset",
