@@ -137,7 +137,10 @@ export_pacta_files <- function(
     "factset_iss_emissions.rds"
   )
   logger::log_info("Fetching ISS emissions data.")
-  iss_emissions <- get_iss_emissions_data(conn = conn)
+  iss_emissions <- get_iss_emissions_data(
+    conn = conn,
+    reporting_year = lubridate::year(data_timestamp)
+  )
   logger::log_info(
     "Exporting ISS emissions data to ", iss_emissions_path
   )
