@@ -47,6 +47,46 @@
         "description": "Deploy Database and FDSLoader image to update the database."
       }
     },
+    "factset-serial": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Serial Number provided by FactSet"
+      }
+    },
+    "factset-username": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Username provided by FactSet"
+      }
+    },
+    "backupDB": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": {
+        "description": "Backup the database to a file."
+      }
+    },
+    "restoreDB": {
+      "type": "string",
+      "defaultValue": "1",
+      "metadata": {
+        "description": "Restore the database from a backup."
+      }
+    },
+    "workflowImageTag": {
+      "type": "string",
+      "defaultValue": "main",
+      "metadata": {
+        "description": "Image tag for the workflow container."
+      }
+    },
+    "loaderImageTag": {
+      "type": "string",
+      "defaultValue": "main",
+      "metadata": {
+        "description": "Image tag for the loader container."
+      }
+    },
     "database-password": {
       "type": "securestring",
       "metadata": {
@@ -91,19 +131,96 @@
     "emptyArray": [],
     "initContainers": [
       {
-        "name": "string",
+        "name": "loader-runner",
         "properties": {
+          "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('loaderImageTag'))]",
+          "ports": [],
+          "resources": {
+            "requests": {
+              "cpu": "[variables('machineCpuCores')]",
+              "memoryInGB": "[variables('machineMemoryInGB')]"
+            }
+          },
           "environmentVariables": [
             {
-              "name": "FOO",
-              "value": "bar"
+              "name": "RESTORE_DB",
+              "value": "[parameters('restoreDB')]"
+            },
+            {
+              "name": "BACKUP_DB",
+              "value": "[parameters('backupDB')]"
+            },
+            {
+              "name": "PGUSER",
+              "value": "[variables('PGUSER')]"
+            },
+            {
+              "name": "PGPASSWORD",
+              "secureValue": "[parameters('database-password')]"
+            },
+            {
+              "name": "PGHOST",
+              "value": "[variables('PGHOST')]"
+            },
+            {
+              "name": "PGDATABASE",
+              "value": "[variables('PGDATABASE')]"
+            },
+            {
+              "name": "FACTSET_USER",
+              "value": "[parameters('factset-username')]"
+            },
+            {
+              "name": "FACTSET_SERIAL",
+              "secureValue": "[parameters('factset-serial')]"
+            },
+            {
+              "name": "KEY_FILENAME",
+              "value": "key.txt"
+            },
+            {
+              "name": "DEPLOY_START_TIME",
+              "value": "[parameters('starttime')]"
+            },
+            {
+              "name": "MACHINE_CORES",
+              "value": "[variables('machineCpuCores')]"
+            },
+            {
+              "name": "WORKINGSPACEPATH",
+              "value": "[variables('mountPathWorkingSpace')]"
+            },
+            {
+              "name": "LOG_LEVEL",
+              "value": "DEBUG"
+            },
+            {
+              "name": "FDS_LOADER_PATH",
+              "value": "/home/fdsrunner"
+            },
+            {
+              "name": "FDS_LOADER_ZIP_FILENAME",
+              "value": "[variables('FDSLoaderZipFilename')]"
+            },
+            {
+              "name": "FDS_LOADER_SOURCE_PATH",
+              "value": "[variables('mountPathFDSLoader')]"
             }
           ],
-          "image": "hello-world"
+          "volumeMounts": [
+            {
+              "name": "factset-loader",
+              "mountPath": "[variables('mountPathFDSLoader')]"
+            },
+            {
+              "name": "workingspace",
+              "mountPath": "[variables('mountPathWorkingSpace')]"
+            }
+          ]
         }
       }
     ]
-        
+
   },
 
   "functions": [],
@@ -127,7 +244,7 @@
           {
             "name": "workflow-factset",
             "properties": {
-              "image": "[concat(variables('containerregistry'),'/workflow.factset:main')]",
+              "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('workflowImageTag'))]",
               "ports": [],
               "resources": {
                 "requests": {
@@ -168,7 +285,7 @@
                   "name": "EXPORT_DESTINATION",
                   "value": "[variables('mountPathExport')]"
                 },
-                                {
+                {
                   "name": "DATA_TIMESTAMP",
                   "value": "[parameters('dataTimestamp')]"
                 }
@@ -193,7 +310,23 @@
               "storageAccountName": "pactarawdata",
               "storageAccountKey": "[parameters('rawdata-storageaccountkey')]"
             }
+          },
+          {
+            "name": "workingspace",
+            "emptyDir": {}
+          },
+          {
+            "name": "factset-loader",
+            "azureFile": {
+              "shareName": "factset-loader",
+              "readOnly": false,
+              "storageAccountName": "pactarawdata",
+              "storageAccountKey": "[parameters('rawdata-storageaccountkey')]"
+            }
           }
+        ],
+        "dependsOn": [
+          "[if(parameters('updateDB'), resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName')), '')]"
         ]
       }
     },
