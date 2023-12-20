@@ -68,7 +68,11 @@ export_pacta_files <- function(
 
   export_dir <- file.path(
     destination,
-    paste0("timestamp", data_timestamp_chr, "_pulled", start_time_chr)
+    paste0(
+      "factset-pacta", "_",
+      "timestamp-", data_timestamp_chr, "_",
+      "pulled-", start_time_chr
+    )
   )
 
   if (!dir.exists(export_dir)) {
