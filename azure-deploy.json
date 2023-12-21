@@ -128,8 +128,14 @@
     "dbServerEdition": "GeneralPurpose",
     "dbServerName": "[concat(parameters('containerGroupName'), '-postgres')]",
     "dbSkuSizeGB": 256,
-    "machineCpuCores": 2,
-    "machineMemoryInGB": 8,
+    "machineCpuCoresLimitLoader": 3,
+    "machineCpuCoresLimitWorkflow": 2,
+    "machineCpuCoresRequestLoader": 2,
+    "machineCpuCoresRequestWorkflow": 1,
+    "machineMemoryInGBLimitLoader": 6,
+    "machineMemoryInGBLimitWorkflow": 16,
+    "machineMemoryInGBRequestLoader": 4,
+    "machineMemoryInGBRequestWorkflow": 12,
     "mountPathExport": "/mnt/factset-extracted",
     "mountPathFDSLoader": "/mnt/factset-loader",
     "mountPathWorkingSpace": "/mnt/workingspace",
@@ -143,9 +149,13 @@
           "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
           "ports": [],
           "resources": {
+            "limits": {
+              "cpu": "[variables('machineCpuCoresLimitWorkflow')]",
+              "memoryInGB": "[variables('machineMemoryInGBLimitWorkflow')]"
+            },
             "requests": {
-              "cpu": "[variables('machineCpuCores')]",
-              "memoryInGB": "[variables('machineMemoryInGB')]"
+              "cpu": "[variables('machineCpuCoresRequestWorkflow')]",
+              "memoryInGB": "[variables('machineMemoryInGBRequestWorkflow')]"
             }
           },
           "environmentVariables": [
@@ -171,7 +181,7 @@
             },
             {
               "name": "MACHINE_CORES",
-              "value": "[variables('machineCpuCores')]"
+              "value": "[variables('machineCpuCoresRequestWorkflow')]"
             },
             {
               "name": "LOG_LEVEL",
@@ -214,9 +224,13 @@
           "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
           "ports": [],
           "resources": {
+            "limits": {
+              "cpu": "[variables('machineCpuCoresLimitLoader')]",
+              "memoryInGB": "[variables('machineMemoryInGBLimitLoader')]"
+            },
             "requests": {
-              "cpu": "[variables('machineCpuCores')]",
-              "memoryInGB": "[variables('machineMemoryInGB')]"
+              "cpu": "[variables('machineCpuCoresRequestLoader')]",
+              "memoryInGB": "[variables('machineMemoryInGBRequestLoader')]"
             }
           },
           "environmentVariables": [
@@ -262,7 +276,7 @@
             },
             {
               "name": "MACHINE_CORES",
-              "value": "[variables('machineCpuCores')]"
+              "value": "[variables('machineCpuCoresRequestLoader')]"
             },
             {
               "name": "WORKINGSPACEPATH",
