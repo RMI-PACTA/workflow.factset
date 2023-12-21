@@ -140,6 +140,9 @@
       {
         "name": "workflow-factset",
         "properties": {
+          "command": [
+            "tail", "-f", "/dev/null"
+          ],
           "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
           "ports": [],
           "resources": {
@@ -184,12 +187,24 @@
             {
               "name": "DATA_TIMESTAMP",
               "value": "[parameters('dataTimestamp')]"
+            },
+            {
+              "name": "UPDATE_DB",
+              "value": "[parameters('updateDB')]"
+            },
+            {
+              "name": "WORKINGSPACEPATH",
+              "value": "[variables('mountPathWorkingSpace')]"
             }
           ],
           "volumeMounts": [
             {
               "name": "factset-extracted",
               "mountPath": "[variables('mountPathExport')]"
+            },
+            {
+              "name": "workingspace",
+              "mountPath": "[variables('mountPathWorkingSpace')]"
             }
           ]
         }
@@ -199,6 +214,9 @@
       {
         "name": "loader-runner",
         "properties": {
+          "command": [
+            "tail", "-f", "/dev/null"
+          ],
           "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
           "ports": [],
           "resources": {
