@@ -3,6 +3,13 @@
   "contentVersion": "0.0.0.5",
 
   "parameters": {
+    "PGHOSTOverride": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Explicitly define a (full URL) hostname for PGHOST. If empty, the hostname will be derived from the container group name."
+      }
+    },
     "PGPASSWORD": {
       "type": "securestring",
       "metadata": {
@@ -112,7 +119,7 @@
 
     "FDSLoaderZipFilename": "FDSLoader-Linux-2.13.6.0.zip",
     "PGDATABASE": "FDS",
-    "PGHOST": "[concat(variables('dbServerName'), '.postgres.database.azure.com')]",
+    "PGHOST": "[if(empty(parameters('PGHOSTOverride')), concat(variables('dbServerName'), '.postgres.database.azure.com'), parameters('PGHOSTOverride'))]",
     "PGUSER": "postgres",
     "containerregistry": "ghcr.io/rmi-pacta",
     "dbAvailabilityZone": "1",
