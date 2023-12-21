@@ -129,18 +129,84 @@
     "dbServerName": "[concat(parameters('containerGroupName'), '-postgres')]",
     "dbSkuSizeGB": 256,
     "machineCpuCores": 2,
-    "machineMemoryInGB": 16,
+    "machineMemoryInGB": 8,
     "mountPathExport": "/mnt/factset-extracted",
     "mountPathFDSLoader": "/mnt/factset-loader",
     "mountPathWorkingSpace": "/mnt/workingspace",
     "postgresVersion": "14",
 
     "emptyArray": [],
-    "initContainers": [
+    "ContainerDefinitionWorkflow":[
+      {
+        "name": "workflow-factset",
+        "properties": {
+          "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
+          "ports": [],
+          "resources": {
+            "requests": {
+              "cpu": "[variables('machineCpuCores')]",
+              "memoryInGB": "[variables('machineMemoryInGB')]"
+            }
+          },
+          "environmentVariables": [
+            {
+              "name": "PGUSER",
+              "value": "[variables('PGUSER')]"
+            },
+            {
+              "name": "PGPASSWORD",
+              "secureValue": "[parameters('PGPASSWORD')]"
+            },
+            {
+              "name": "PGHOST",
+              "value": "[variables('PGHOST')]"
+            },
+            {
+              "name": "PGDATABASE",
+              "value": "[variables('PGDATABASE')]"
+            },
+            {
+              "name": "DEPLOY_START_TIME",
+              "value": "[parameters('starttime')]"
+            },
+            {
+              "name": "MACHINE_CORES",
+              "value": "[variables('machineCpuCores')]"
+            },
+            {
+              "name": "LOG_LEVEL",
+              "value": "TRACE"
+            },
+            {
+              "name": "EXPORT_DESTINATION",
+              "value": "[variables('mountPathExport')]"
+            },
+            {
+              "name": "DATA_TIMESTAMP",
+              "value": "[parameters('dataTimestamp')]"
+            }
+          ],
+          "volumeMounts": [
+            {
+              "name": "factset-extracted",
+              "mountPath": "[variables('mountPathExport')]"
+            }
+          ]
+        }
+      }
+    ],
+    "ContainerDefinitionLoader": [
       {
         "name": "loader-runner",
         "properties": {
           "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
+          "ports": [],
+          "resources": {
+            "requests": {
+              "cpu": "[variables('machineCpuCores')]",
+              "memoryInGB": "[variables('machineMemoryInGB')]"
+            }
+          },
           "environmentVariables": [
             {
               "name": "RESTORE_DB",
@@ -242,66 +308,8 @@
         "[if(parameters('updateDB'), resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName')), '')]"
       ],
       "properties": {
-        "initContainers": "[if(parameters('updateDB'), variables('initContainers'), variables('emptyArray'))]",
-        "containers": [
-          {
-            "name": "workflow-factset",
-            "properties": {
-              "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
-              "ports": [],
-              "resources": {
-                "requests": {
-                  "cpu": "[variables('machineCpuCores')]",
-                  "memoryInGB": "[variables('machineMemoryInGB')]"
-                }
-              },
-              "environmentVariables": [
-                {
-                  "name": "PGUSER",
-                  "value": "[variables('PGUSER')]"
-                },
-                {
-                  "name": "PGPASSWORD",
-                  "secureValue": "[parameters('PGPASSWORD')]"
-                },
-                {
-                  "name": "PGHOST",
-                  "value": "[variables('PGHOST')]"
-                },
-                {
-                  "name": "PGDATABASE",
-                  "value": "[variables('PGDATABASE')]"
-                },
-                {
-                  "name": "DEPLOY_START_TIME",
-                  "value": "[parameters('starttime')]"
-                },
-                {
-                  "name": "MACHINE_CORES",
-                  "value": "[variables('machineCpuCores')]"
-                },
-                {
-                  "name": "LOG_LEVEL",
-                  "value": "TRACE"
-                },
-                {
-                  "name": "EXPORT_DESTINATION",
-                  "value": "[variables('mountPathExport')]"
-                },
-                {
-                  "name": "DATA_TIMESTAMP",
-                  "value": "[parameters('dataTimestamp')]"
-                }
-              ],
-              "volumeMounts": [
-                {
-                  "name": "factset-extracted",
-                  "mountPath": "[variables('mountPathExport')]"
-                }
-              ]
-            }
-          }
-        ],
+        "containers":
+        "[concat(variables('ContainerDefinitionWorkflow'), if(parameters('updateDB'), variables('ContainerDefinitionLoader'), variables('emptyArray')))]",
         "restartPolicy": "[parameters('restartPolicy')]",
         "osType": "Linux",
         "volumes": [
