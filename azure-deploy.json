@@ -140,9 +140,6 @@
       {
         "name": "workflow-factset",
         "properties": {
-          "command": [
-            "tail", "-f", "/dev/null"
-          ],
           "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
           "ports": [],
           "resources": {
@@ -214,9 +211,6 @@
       {
         "name": "loader-runner",
         "properties": {
-          "command": [
-            "tail", "-f", "/dev/null"
-          ],
           "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
           "ports": [],
           "resources": {
