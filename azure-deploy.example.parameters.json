@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "identity": {
+      "value": "/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/MyResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyManagedIdentity"
+    },
+    "storageAccountKeyRawdata": {
+      "value": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=="
+    },
+    "loaderFactsetSerial": {
+      "value": "123456"
+    },
+    "loaderFactsetUsername": {
+      "value": "FS_USER"
+    },
+    "dataTimestamp": {
+      "value": "20221231"
+    },
+    "PGPASSWORD": {
+      "value": "Super5ecret!"
+    }
+  }
+}
