@@ -14,11 +14,22 @@ export_pacta_files <- function(
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
   create_tar = TRUE,
+  wait_for_update = as.logical(Sys.getenv("UPDATE_DB", FALSE)),
+  wait_file = file.path(Sys.getenv("WORKINGSPACEPATH"), "done_loader"),
   terminate_connection = (
     # Terminate connection if it was created by this function.
     deparse(substitute(conn)) == formals(export_pacta_files)[["conn"]]
   )
 ) {
+
+  if (wait_for_update) {
+    logger::log_info("Waiting for database update to finish.")
+    while (!file.exists(wait_file)) {
+      logger::log_debug("Waiting: file not found: ", wait_file)
+      Sys.sleep(30)
+    }
+    logger::log_info("Database update finished.")
+  }
 
   # Prepare output directories
 
@@ -94,7 +105,8 @@ export_pacta_files <- function(
       "MACHINE_CORES",
       "PGDATABASE",
       "PGHOST",
-      "PGUSER"
+      "PGUSER",
+      "UPDATE_DB"
     )
   )
   metadata_json <- character()
