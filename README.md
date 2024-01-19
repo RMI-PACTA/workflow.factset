@@ -147,3 +147,70 @@ az deployment group create --resource-group "$RESOURCEGROUP" --template-file azu
 az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json --parameters @azure-deploy.parameters.json
 
 ```
+
+## Exported Files
+
+The files exported by `workflow.factset::export_pacta_files()` are:
+
+### factset_entity_financing_data.rds
+
+|Column Name|Column Type|Example Content|Description|
+|---|---|---|---|
+|fsym_id|chr|"XXXXXX-R"|FactSet identifier for security|
+|date|date|2022-12-31|date of balance sheet data|
+|currency|chr|"USD"|currency for balance sheet data|
+|ff_mkt_val|dbl|2000000|Market Value - based on latest closing price and monthly shares|
+|ff_debt|dbl|1000000|Total debt|
+|fsym_company_id|chr|"XXXXXX-S"|fsym_id connecting to FactSet Fundamentals dataset|
+|factset_entity_id|chr|"XXXXXX-E"|FactSet identifier for an entity|
+
+### factset_entity_info.rds
+
+|Column Name|Column Type|Example Content|Description|
+|---|---|---|---|
+|factset_entity_id|chr|"XXXXXX-E"| FactSet identifier for an entity|
+|entity_proper_name|chr|"FooBar, Inc."|Entity common name, normalized and in proper case|
+|iso_country|chr|"US"|2 letter country code for domicile|
+|sector_code|chr|"6000"|4 digit code for FactSet sector classification|
+|factset_sector_desc|chr|"Miscellaneous"|FactSet description for sector|
+|industry_code|chr|"6005"|4 digit code for FactSet industry classification|
+|factset_industry_desc|chr|"Miscellaneous"|FactSet description for industry|
+|credit_parent_id|chr|"XXXXXX-E"|FactSet entity ID for credit parent|
+|ent_entity_affiliates_last_update|chr|"2023-12-21T22:35:27Z"|Timestamp for last update of `ent_entity_affiliates` table|
+
+### factset_financial_data.rds
+
+|Column Name|Column Type|Example Content|Description|
+|---|---|---|---|
+|fsym_id|chr|"XXXXXX-S"| FactSet identifier for financial instrument|
+|isin|chr|"XX0000000001"|ISIN for instrument|
+|factset_entity_id|chr|XXXXXX-E| FactSet identifier for an entity|
+|adj_price|dbl|100.5|Adjusted Share price|
+|adj_shares_outstanding|dbl|NA|Adjusted number of shares outstanding|
+|issue_type|chr|NA|Share Type|
+|one_adr_eq|dbl|NA|Number of shares equivilent to one ADR|
+
+### factset_fund_data.rds
+
+|Column Name|Column Type|Example Content|Description|
+|---|---|---|---|
+|factset_fund_id|chr|"FFFFFF-E"|FactSet identifier for fund|
+|fund_reported_mv|dbl|100000000|Total reported Market Value|
+|holding_isin|chr|"XX0000000002"|ISIN held in fund|
+|holding_reported_mv|dbl|100000|Market value of ISIN held in fund|
+
+### factset_isin_to_fund_table.rds
+
+|Column Name|Column Type|Example Content|Description|
+|---|---|---|---|
+|isin|chr|"XX0000000001"|ISIN|
+|fsym_id|chr|"XXXXXX-S"| FactSet identifier for financial instrument|
+|factset_fund_id|chr|"FFFFFF-E"|FactSet identifier for fund|
+
+### factset_iss_emissions.rds
+
+|Column Name|Column Type|Example Content|Description|
+|---|---|---|---|
+|factset_entity_id|chr|"XXXXXX-E"| FactSet identifier for an entity|
+|icc_total_emissions|dbl|123.4|Total emissions for entity|
+|icc_scope_3_emissions|dbl|123.4|Scope 3 emissions for entity|
