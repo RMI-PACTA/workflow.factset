@@ -179,7 +179,7 @@ export_pacta_files <- function(
     iss_emissions_path = iss_emissions_path
   )
 
-  manifest_path <- file.path(export_dir, "manifest.json")
+  manifest_path <- file.path(export_dir, "factset-export-manifest.json")
   logger::log_info("Writing \"manifest.json\" file to ", manifest_path)
   export_manifest(
     manifest_path = manifest_path,
