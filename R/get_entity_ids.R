@@ -23,7 +23,7 @@ get_entity_ids <- function(conn, colname = "factset_entity_id") {
   )
   tables_to_extract <- names(table_has_entity_id_col)[table_has_entity_id_col]
   logger::log_trace("Tables with column: ", colname, ": ",
-    paste(tables_to_extract, collapse = ", ")
+    toString(tables_to_extract)
   )
 
   for (table_name in tables_to_extract) {
