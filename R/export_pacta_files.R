@@ -172,7 +172,7 @@ export_pacta_files <- function(
     conn = conn
   )
   logger::log_info(
-    "Exporting FactSet Entity IDs to ", iss_emissions_path
+    "Exporting FactSet Entity IDs to ", entity_ids_path
   )
   write.csv(x = entity_ids, file = entity_ids_path)
 
