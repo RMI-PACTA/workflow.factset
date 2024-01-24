@@ -4,7 +4,7 @@
 #' @param conn database connection
 #'
 #' @return A tibble properly prepared to be saved as the
-#'   `factset_entity_info.rds` output file
+#'   `factset_entity_ids.csv` output file
 #'
 #' @export
 
