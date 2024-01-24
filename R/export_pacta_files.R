@@ -162,6 +162,20 @@ export_pacta_files <- function(
   )
   saveRDS(object = iss_emissions, file = iss_emissions_path)
 
+  # Note that this writes to CSV, not RDS.
+  entity_ids_path <- file.path(
+    export_dir,
+    "factset_entity_ids.csv"
+  )
+  logger::log_info("Fetching Factset entity IDs.")
+  entity_ids <- get_entity_ids(
+    conn = conn
+  )
+  logger::log_info(
+    "Exporting FactSet Entity IDs to ", entity_ids_path
+  )
+  write.csv(x = entity_ids, file = entity_ids_path)
+
   logger::log_info("Done with data export.")
 
   # Terminate connection if needed
@@ -176,7 +190,8 @@ export_pacta_files <- function(
     entity_financing_data_path = entity_financing_data_path,
     fund_data_path = fund_data_path,
     isin_to_fund_table_path = isin_to_fund_table_path,
-    iss_emissions_path = iss_emissions_path
+    iss_emissions_path = iss_emissions_path,
+    entity_ids_path = entity_ids_path
   )
 
   manifest_path <- file.path(export_dir, "factset-export-manifest.json")
