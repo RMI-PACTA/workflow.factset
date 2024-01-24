@@ -36,10 +36,10 @@ get_entity_ids <- function(conn, colname = "factset_entity_id") {
       .data = dplyr::tbl(conn, table_name),
       dplyr::all_of(colname)
     )
-    if (table_name == tables_to_extract[[1L]]) {
-      results <- this_result
-    } else {
+    if (exists("results")) {
       results <- dplyr::union(results, this_result)
+    } else {
+      results <- this_result
     }
   }
 
