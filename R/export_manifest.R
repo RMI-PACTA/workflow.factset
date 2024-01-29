@@ -94,6 +94,32 @@ get_info_for_files <- function(file_paths) {
       ),
       file_md5 = digest::digest(f, algo = "md5", file = TRUE)
     )
+
+    logger::log_trace("Getting summary information for file: ", f)
+    if (tolower(tools::file_ext(f)) == "rds") {
+      contents <- readRDS(f)
+    } else if (tolower(tools::file_ext(f)) == "csv") {
+      contents <- read.csv(f)
+    } else {
+      logger::log_warn("File not supported for summary information: ", f)
+      contents <- NULL
+    }
+    # expecting a data.frame for output files
+    if (inherits(contents, "data.frame")) {
+      output[[basename(f)]][["summary_info"]] <- list(
+        nrow = nrow(contents),
+        colnames = colnames(contents),
+        class = class(contents)
+      )
+    } else {
+      logger::log_warn(
+        "Only data.frame objects supported for summary information: ", f
+      )
+      output[[basename(f)]][["summary_info"]] <- list(
+        class = class(contents)
+      )
+    }
+
   }
   return(output)
 }
