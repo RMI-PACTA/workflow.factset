@@ -2,8 +2,18 @@
 #'
 #' @param Destination directory for the output files
 #'
+#' @param conn DBI connection object.
 #' @param destination path to directory where exported files will be saved
 #' @param data_timestamp filter data as-of this timestamp
+#' @param iss_reporting_year Reporting year for ISS emissions data
+#' @param create_tar Flag to create .tar.gz file of exported files
+#' @param wait_for_update Wait for `wait_file` to exist before exporting.
+#' Useful when run in conjunction with factset data loader
+#' @param wait_file Path to file that indicates that the database update is
+#' complete.
+#' @param terminate_connection Flag to terminate connection, rather than let
+#' finalizer close db connection. Allows for early termination of connection
+#' before exporting tar file or metadata.
 #'
 #' @return vector of paths to exported files
 #'
@@ -13,6 +23,7 @@ export_pacta_files <- function(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  iss_reporting_year = Sys.getenv("ISS_REPORTING_YEAR", ""),
   create_tar = TRUE,
   wait_for_update = as.logical(Sys.getenv("UPDATE_DB", FALSE)),
   wait_file = file.path(Sys.getenv("WORKINGSPACEPATH"), "done_loader"),
@@ -76,6 +87,18 @@ export_pacta_files <- function(
       " (using lubridate::ymd_hms(truncated = 3))."
     )
     stop("Invalid data_timestamp argument.")
+  }
+
+  if (inherits(iss_reporting_year, "character")) {
+    if (nzchar(iss_reporting_year)) {
+      iss_reporting_year <- as.integer(iss_reporting_year)
+    } else {
+      logger::log_warn(
+        "The environment variable ISS_REPORTING_YEAR is not set. ",
+        "Using data_timestamp - 1 as ISS reporting year."
+      )
+      iss_reporting_year <- lubridate::year(data_timestamp) - 1L
+    }
   }
 
   export_dir <- file.path(
@@ -155,7 +178,7 @@ export_pacta_files <- function(
   logger::log_info("Fetching ISS emissions data.")
   iss_emissions <- get_iss_emissions_data(
     conn = conn,
-    reporting_year = lubridate::year(data_timestamp)
+    reporting_year = iss_reporting_year
   )
   logger::log_info(
     "Exporting ISS emissions data to ", iss_emissions_path
