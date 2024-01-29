@@ -35,7 +35,7 @@
       }
     },
     "issReportingYear": {
-      "type": "integer",
+      "type": "string",
       "metadata": {
         "description": "Reporting year to use for ISS data."
       }
