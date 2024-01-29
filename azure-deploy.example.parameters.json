@@ -17,6 +17,9 @@
     "dataTimestamp": {
       "value": "20221231"
     },
+    "issReportingYear": {
+      "value": 2021
+    },
     "PGPASSWORD": {
       "value": "Super5ecret!"
     }

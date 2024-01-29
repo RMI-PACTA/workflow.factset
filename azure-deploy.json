@@ -34,6 +34,12 @@
         "description": "The ID of the user assigned identity to use for the container group."
       }
     },
+    "issReportingYear": {
+      "type": "integer",
+      "metadata": {
+        "description": "Reporting year to use for ISS data."
+      }
+    },
     "imageTagLoader": {
       "type": "string",
       "defaultValue": "main",
@@ -194,6 +200,10 @@
             {
               "name": "DATA_TIMESTAMP",
               "value": "[parameters('dataTimestamp')]"
+            },
+            {
+              "name": "ISS_REPORTING_YEAR",
+              "value": "[parameters('issReportingYear')]"
             },
             {
               "name": "UPDATE_DB",
