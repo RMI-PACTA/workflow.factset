@@ -21,6 +21,9 @@ The default values to control behavior of `export_pacta_files()` (and the relate
   String.
   Date to use for share prices, fund holdings, and entity financing information.
   Exact format flexible, but should be parseable by `lubridate::ymd_hms()`
+* `ISS_REPORTING_YEAR`:
+  Integer.
+  Year to use for ISS reporting data.
 * `DEPLOY_START_TIME`:
   String, optional (default `Sys.time()`).
   Provides identifier to distinguish between dataset pulled from database at different times.
