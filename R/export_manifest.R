@@ -28,6 +28,7 @@ export_manifest <- function(
       EXPORT_DESTINATION = Sys.getenv("EXPORT_DESTINATION"),
       HOSTNAME = Sys.getenv("HOSTNAME"),
       LOG_LEVEL = Sys.getenv("LOG_LEVEL"),
+      ISS_REPORTING_YEAR = Sys.getenv("ISS_REPORTING_YEAR"),
       MACHINE_CORES = Sys.getenv("MACHINE_CORES"),
       PGDATABASE = Sys.getenv("PGDATABASE"),
       PGHOST = Sys.getenv("PGHOST"),
