@@ -101,12 +101,15 @@ export_pacta_files <- function(
     }
   }
 
+  unique_pull_string <- paste0(
+    "timestamp-", data_timestamp_chr, "_",
+    "pulled-", start_time_chr
+  )
   export_dir <- file.path(
     destination,
     paste0(
       "factset-pacta", "_",
-      "timestamp-", data_timestamp_chr, "_",
-      "pulled-", start_time_chr
+      unique_pull_string
     )
   )
 
@@ -118,7 +121,7 @@ export_pacta_files <- function(
 
   financial_data_path <- file.path(
     export_dir,
-    "factset_financial_data.rds"
+    paste0(unique_pull_string, "_factset_financial_data.rds")
   )
   logger::log_info("Fetching financial data.")
   financial_data <- get_financial_data(
@@ -128,7 +131,10 @@ export_pacta_files <- function(
   logger::log_info("Exporting financial data to ", financial_data_path)
   saveRDS(object = financial_data, file = financial_data_path)
 
-  entity_info_path <- file.path(export_dir, "factset_entity_info.rds")
+  entity_info_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_entity_info.rds")
+  )
   logger::log_info("Fetching entity info data.")
   entity_info <- get_entity_info(conn = conn)
   logger::log_info("Exporting entity info data to ", entity_info_path)
@@ -136,7 +142,7 @@ export_pacta_files <- function(
 
   entity_financing_data_path <- file.path(
     export_dir,
-    "factset_entity_financing_data.rds"
+    paste0(unique_pull_string, "_factset_entity_financing_data.rds")
   )
   logger::log_info("Fetching entity financing data.")
   entity_financing_data <- get_entity_financing_data(
@@ -151,7 +157,10 @@ export_pacta_files <- function(
     file = entity_financing_data_path
   )
 
-  fund_data_path <- file.path(export_dir, "factset_fund_data.rds")
+  fund_data_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_fund_data.rds")
+  )
   logger::log_info("Fetching fund data.")
   fund_data <- get_fund_data(
     conn = conn,
@@ -162,7 +171,7 @@ export_pacta_files <- function(
 
   isin_to_fund_table_path <- file.path(
     export_dir,
-    "factset_isin_to_fund_table.rds"
+    paste0(unique_pull_string, "_factset_isin_to_fund_table.rds")
   )
   logger::log_info("Fetching ISIN to fund table.")
   isin_to_fund_table <- get_isin_to_fund_table(conn = conn)
@@ -173,7 +182,7 @@ export_pacta_files <- function(
 
   iss_emissions_path <- file.path(
     export_dir,
-    "factset_iss_emissions.rds"
+    paste0(unique_pull_string, "_factset_iss_emissions.rds")
   )
   logger::log_info("Fetching ISS emissions data.")
   iss_emissions <- get_iss_emissions_data(
@@ -188,7 +197,7 @@ export_pacta_files <- function(
   # Note that this writes to CSV, not RDS.
   entity_ids_path <- file.path(
     export_dir,
-    "factset_entity_ids.csv"
+    paste0(unique_pull_string, "_factset_entity_ids.csv")
   )
   logger::log_info("Fetching Factset entity IDs.")
   entity_ids <- get_entity_ids(
@@ -217,7 +226,10 @@ export_pacta_files <- function(
     entity_ids_path = entity_ids_path
   )
 
-  manifest_path <- file.path(export_dir, "factset-export-manifest.json")
+  manifest_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "-factset-export-manifest.json")
+  )
   logger::log_info("Writing \"manifest.json\" file to ", manifest_path)
   export_manifest(
     manifest_path = manifest_path,
