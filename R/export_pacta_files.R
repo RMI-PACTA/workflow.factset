@@ -206,7 +206,12 @@ export_pacta_files <- function(
   logger::log_info(
     "Exporting FactSet Entity IDs to ", entity_ids_path
   )
-  write.csv(x = entity_ids, file = entity_ids_path)
+  write.csv(
+    x = entity_ids,
+    file = entity_ids_path,
+    na = "",
+    row.names = FALSE
+  )
 
   logger::log_info("Done with data export.")
 
