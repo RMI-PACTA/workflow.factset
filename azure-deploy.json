@@ -89,7 +89,7 @@
     },
     "restartPolicy": {
       "type": "string",
-      "defaultValue": "OnFailure",
+      "defaultValue": "Never",
       "allowedValues": [
         "Always",
         "Never",
@@ -110,6 +110,18 @@
       "type": "securestring",
       "metadata": {
         "description": "The storage account key for the rawdata storage account."
+      }
+    },
+    "workspaceId": {
+      "type": "string",
+      "metadata": {
+        "description": "The ID for a Log Analytics Workspace."
+      }
+    },
+    "workspaceKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The key for a Log Analytics Workspace."
       }
     },
     "updateDB": {
@@ -133,7 +145,7 @@
     "dbInstanceType": "Standard_D2ds_v4",
     "dbServerEdition": "GeneralPurpose",
     "dbServerName": "[concat(parameters('containerGroupName'), '-postgres')]",
-    "dbSkuSizeGB": 256,
+    "dbSkuSizeGB": 512,
     "machineCpuCoresLimitLoader": 3,
     "machineCpuCoresLimitWorkflow": 2,
     "machineCpuCoresRequestLoader": 2,
@@ -344,6 +356,13 @@
         "[if(parameters('updateDB'), resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName')), '')]"
       ],
       "properties": {
+        "diagnostics": {
+          "logAnalytics": {
+            "logType": "ContainerInstanceLogs",
+            "workspaceId": "[parameters('workspaceId')]]",
+            "workspaceKey": "[parameters('workspaceKey')]"
+          }
+        },
         "containers":
         "[concat(variables('ContainerDefinitionWorkflow'), if(parameters('updateDB'), variables('ContainerDefinitionLoader'), variables('emptyArray')))]",
         "restartPolicy": "[parameters('restartPolicy')]",
