@@ -37,7 +37,7 @@ export_pacta_files <- function(
     logger::log_info("Waiting for database update to finish.")
     while (!file.exists(wait_file)) {
       logger::log_debug("Waiting: file not found: ", wait_file)
-      Sys.sleep(30)
+      Sys.sleep(30L)
     }
     logger::log_info("Database update finished.")
   }
@@ -62,7 +62,7 @@ export_pacta_files <- function(
 
   start_time_chr <- Sys.getenv(
     "DEPLOY_START_TIME",
-    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC"),
+    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC")
   )
 
   if (inherits(data_timestamp, "character")) {
@@ -70,7 +70,7 @@ export_pacta_files <- function(
       data_timestamp,
       quiet = TRUE,
       tz = "UTC",
-      truncated = 3
+      truncated = 3L
     )
   }
 
@@ -222,13 +222,13 @@ export_pacta_files <- function(
   }
 
   filepaths <- c(
-    financial_data_path = financial_data_path,
-    entity_info_path = entity_info_path,
     entity_financing_data_path = entity_financing_data_path,
+    entity_ids_path = entity_ids_path,
+    entity_info_path = entity_info_path,
+    financial_data_path = financial_data_path,
     fund_data_path = fund_data_path,
     isin_to_fund_table_path = isin_to_fund_table_path,
-    iss_emissions_path = iss_emissions_path,
-    entity_ids_path = entity_ids_path
+    iss_emissions_path = iss_emissions_path
   )
 
   manifest_path <- file.path(

@@ -8,7 +8,10 @@
 #'
 #' @export
 
-get_entity_ids <- function(conn, colname = "factset_entity_id") {
+get_entity_ids <- function(
+  conn,
+  colname = "factset_entity_id"
+) {
 
   logger::log_debug("Extracting all values of ", colname, " from database")
 
