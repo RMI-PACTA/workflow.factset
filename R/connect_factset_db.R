@@ -17,7 +17,7 @@ connect_factset_db <- function(
   dbname = Sys.getenv("PGDATABASE"),
   host = Sys.getenv("PGHOST"),
   port = Sys.getenv("PGPORT", 5432L),
-  options = "-c search_path=fds",
+  db_options = "-c search_path=fds",
   username = Sys.getenv("PGUSER"),
   password = Sys.getenv("PGPASSWORD")
 ) {
@@ -55,7 +55,7 @@ connect_factset_db <- function(
       port = port,
       user = username,
       password = password,
-      options = options
+      options = db_options
     )
 
   reg_conn_finalizer(conn, DBI::dbDisconnect, parent.frame())
