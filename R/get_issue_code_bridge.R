@@ -37,6 +37,28 @@ get_issue_code_bridge <- function(conn) {
   factset_issue_code_bridge <- dplyr::collect(factset_issue_code_bridge)
   logger::log_trace("Download complete.")
 
+  logger::log_trace("Adding PACTA Asset types to issue code bridge.")
+  pacta_issue_code_bridge <- factset_issue_code_bridge %>%
+    dplyr::mutate(
+      asset_type = dplyr::case_when(
+        issue_type_desc == "Bond" ~ "Corporate Bond",
+        issue_type_desc == "Convertible Bond" ~ "Corporate Bond",
+        issue_type_desc == "Debenture" ~ "Corporate Bond",
+        issue_type_desc == "Medium Term Note" ~ "Corporate Bond",
+        issue_type_desc == "Note" ~ "Corporate Bond",
+        issue_type_desc == "Closed-End Mutual Fund" ~ "Fund",
+        issue_type_desc == "Exchange Traded Fund" ~ "Fund",
+        issue_type_desc == "Open-End Mutual Fund" ~ "Fund",
+        issue_type_desc == "ADR/GDR" ~ "Listed Equity", #nolint: nonportable_path_linter
+        issue_type_desc == "Convertible Preferred" ~ "Listed Equity",
+        issue_type_desc == "Dual Listing" ~ "Listed Equity",
+        issue_type_desc == "Equity" ~ "Listed Equity",
+        issue_type_desc == "Equity (Pre-IPO)" ~ "Listed Equity",
+        issue_type_desc == "Preferred" ~ "Listed Equity",
+        TRUE ~ "Other"
+      )
+    )
+
   # return prepared data -----------------------------------------------------
-  return(factset_issue_code_bridge)
+  return(pacta_issue_code_bridge)
 }
