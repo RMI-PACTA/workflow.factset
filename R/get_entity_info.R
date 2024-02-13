@@ -39,7 +39,10 @@ get_entity_info <- function(conn) {
   logger::log_trace("Accessing sector descriptions.")
   sector_code__sector_desc <-
     dplyr::tbl(conn, "ref_v2_factset_sector_map") %>%
-    dplyr::select(.data[["factset_sector_code"]], .data[["factset_sector_desc"]])
+    dplyr::select(
+      .data[["factset_sector_code"]],
+      .data[["factset_sector_desc"]]
+    )
 
   logger::log_trace("Merging sector codes and sector descriptions.")
   factset_sector_desc <-

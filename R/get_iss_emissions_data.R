@@ -68,18 +68,32 @@ get_iss_emissions_data <- function(
   logger::log_trace("Accessing ICC emissions data.")
   icc_total_emissions <-
     dplyr::tbl(conn, "icc_v2_icc_carbon_climate_core") %>%
-    dplyr::filter(.data[["icc_emissions_fiscal_year"]] == .env[["reporting_year"]]) %>%
-    dplyr::group_by(.data[["icc_security_id"]], .data[["icc_emissions_fiscal_year"]]) %>%
+    dplyr::filter(
+      .data[["icc_emissions_fiscal_year"]] == .env[["reporting_year"]]
+    ) %>%
+    dplyr::group_by(
+      .data[["icc_security_id"]],
+      .data[["icc_emissions_fiscal_year"]]
+    ) %>%
     # icc_archive_date marks the date a data point was submitted, and some
     # times there are updates of previous data submissions, so we need to
     # dplyr::filter only for the most recent submission
     dplyr::filter(
-      .data[["icc_archive_date"]] == max(.data[["icc_archive_date"]], na.rm = TRUE)
+      .data[["icc_archive_date"]] == max(
+        .data[["icc_archive_date"]],
+        na.rm = TRUE
+      )
     ) %>%
     dplyr::ungroup() %>%
-    dplyr::group_by(.data[["icc_company_id"]], .data[["icc_emissions_fiscal_year"]]) %>%
+    dplyr::group_by(
+      .data[["icc_company_id"]],
+      .data[["icc_emissions_fiscal_year"]]
+    ) %>%
     dplyr::filter(
-      .data[["icc_archive_date"]] == max(.data[["icc_archive_date"]], na.rm = TRUE)
+      .data[["icc_archive_date"]] == max(
+        .data[["icc_archive_date"]],
+        na.rm = TRUE
+      )
     ) %>%
     dplyr::ungroup() %>%
     dplyr::filter(
