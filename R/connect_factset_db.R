@@ -102,13 +102,11 @@ reg_conn_finalizer <- function(
 }
 
 warn_db_autoclose <- function(conn) {
-  dbname <- DBI::dbGetInfo(conn)[["dbname"]]
-  host <- DBI::dbGetInfo(conn)[["host"]]
   logger::log_warn(
     "The database connection to ",
-    dbname,
+    DBI::dbGetInfo(conn)[["dbname"]],
     " on ",
-    host,
+    DBI::dbGetInfo(conn)[["host"]],
     " was closed automatically ",
     "because the calling environment was closed."
   )
