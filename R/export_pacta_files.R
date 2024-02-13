@@ -194,6 +194,15 @@ export_pacta_files <- function(
   )
   saveRDS(object = iss_emissions, file = iss_emissions_path)
 
+  issue_code_bridge_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_issue_code_bridge.rds")
+  )
+  logger::log_info("Fetching Issue Code bridge.")
+  issue_code_bridge <- get_issue_code_bridge(conn = conn)
+  logger::log_info("Exporting Issue Code bridge to ", issue_code_bridge_path)
+  saveRDS(object = issue_code_bridge, file = issue_code_bridge_path)
+
   # Note that this writes to CSV, not RDS.
   entity_ids_path <- file.path(
     export_dir,
@@ -228,7 +237,8 @@ export_pacta_files <- function(
     fund_data_path = fund_data_path,
     isin_to_fund_table_path = isin_to_fund_table_path,
     iss_emissions_path = iss_emissions_path,
-    entity_ids_path = entity_ids_path
+    entity_ids_path = entity_ids_path,
+    issue_code_bridge_path = issue_code_bridge_path
   )
 
   manifest_path <- file.path(
