@@ -93,5 +93,5 @@ get_entity_financing_data <- function(
 
   # return the entity financing data -------------------------------------------
 
-  entity_financing_data
+  return(entity_financing_data)
 }
