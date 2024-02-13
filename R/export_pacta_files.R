@@ -37,7 +37,7 @@ export_pacta_files <- function(
     logger::log_info("Waiting for database update to finish.")
     while (!file.exists(wait_file)) {
       logger::log_debug("Waiting: file not found: ", wait_file)
-      Sys.sleep(30)
+      Sys.sleep(30L)
     }
     logger::log_info("Database update finished.")
   }
@@ -62,7 +62,7 @@ export_pacta_files <- function(
 
   start_time_chr <- Sys.getenv(
     "DEPLOY_START_TIME",
-    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC"),
+    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC")
   )
 
   if (inherits(data_timestamp, "character")) {
@@ -70,7 +70,7 @@ export_pacta_files <- function(
       data_timestamp,
       quiet = TRUE,
       tz = "UTC",
-      truncated = 3
+      truncated = 3L
     )
   }
 
