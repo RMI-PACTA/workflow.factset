@@ -47,16 +47,15 @@ connect_factset_db <- function(
     username,
     ""
   )
-  conn <-
-    DBI::dbConnect(
-      drv = RPostgres::Postgres(),
-      dbname = dbname,
-      host = host,
-      port = port,
-      user = username,
-      password = password,
-      options = db_options
-    )
+  conn <- DBI::dbConnect(
+    drv = RPostgres::Postgres(),
+    dbname = dbname,
+    host = host,
+    port = port,
+    user = username,
+    password = password,
+    options = db_options
+  )
 
   reg_conn_finalizer(conn, DBI::dbDisconnect, parent.frame())
 }

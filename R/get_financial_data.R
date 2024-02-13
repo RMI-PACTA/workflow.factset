@@ -23,8 +23,7 @@ get_financial_data <- function(
   # factset_entity_id -----------------------------------------------
 
   logger::log_trace("Accessing entity id.")
-  factset_entity_id <-
-    dplyr::tbl(conn, "own_v5_own_sec_entity") %>%
+  factset_entity_id <- dplyr::tbl(conn, "own_v5_own_sec_entity") %>%
     dplyr::select("fsym_id", "factset_entity_id")
 
 
@@ -40,8 +39,7 @@ get_financial_data <- function(
     "Accessing share prices. ",
     "Filtering to date: ", data_timestamp
   )
-  adj_price <-
-    dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
+  adj_price <- dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
     dplyr::filter(.data[["price_date"]] == .env[["data_timestamp"]]) %>%
     dplyr::select("fsym_id", "adj_price")
 
@@ -52,8 +50,7 @@ get_financial_data <- function(
     "Accessing shares outstanding. ",
     "Filtering to date: ", data_timestamp
   )
-  adj_shares_outstanding <-
-    dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
+  adj_shares_outstanding <- dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
     dplyr::filter(.data[["price_date"]] == .env[["data_timestamp"]]) %>%
     dplyr::select("fsym_id", "adj_shares_outstanding")
 
@@ -61,24 +58,21 @@ get_financial_data <- function(
   # issue_type ---------------------------------------------------------------
 
   logger::log_trace("Accessing issue type.")
-  issue_type <-
-    dplyr::tbl(conn, "own_v5_own_sec_coverage") %>%
+  issue_type <- dplyr::tbl(conn, "own_v5_own_sec_coverage") %>%
     dplyr::select("fsym_id", "issue_type")
 
 
   # one_adr_eq ---------------------------------------------------------------
 
   logger::log_trace("Accessing ADR equivilents.")
-  one_adr_eq <-
-    dplyr::tbl(conn, "own_v5_own_sec_adr_ord_ratio") %>%
+  one_adr_eq <- dplyr::tbl(conn, "own_v5_own_sec_adr_ord_ratio") %>%
     dplyr::select(fsym_id = "adr_fsym_id", "one_adr_eq")
 
 
   # merge and collect --------------------------------------------------------
 
   logger::log_trace("Merging financial info.")
-  fin_data <-
-    isin %>%
+  fin_data <- isin %>%
     dplyr::left_join(factset_entity_id, by = "fsym_id") %>%
     dplyr::left_join(adj_price, by = "fsym_id") %>%
     dplyr::left_join(adj_shares_outstanding, by = "fsym_id") %>%

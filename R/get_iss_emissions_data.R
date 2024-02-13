@@ -26,8 +26,10 @@ get_iss_emissions_data <- function(
 
   logger::log_trace("Accessing ICC identifiers.")
   # get the relevant fsym_id to factset_entity_id table ----------------------
-  fsym_id__factset_entity_id <-
-    dplyr::tbl(conn, "icc_v2_icc_sec_entity_hist") %>%
+  fsym_id__factset_entity_id <- dplyr::tbl(
+    conn,
+    "icc_v2_icc_sec_entity_hist"
+  ) %>%
     # end_date identifies the date the identifier was last associated with
     # fsym_id i.e. if there is no end_date (end_date == NA) then the
     # association is still valid
@@ -43,8 +45,7 @@ get_iss_emissions_data <- function(
   # get the relevant icc_security_id to factset_entity_id table --------------
 
   logger::log_trace("Accessing ICC security info.")
-  icc_security_id <-
-    dplyr::tbl(conn, "icc_v2_icc_factset_id_map") %>%
+  icc_security_id <- dplyr::tbl(conn, "icc_v2_icc_factset_id_map") %>%
     dplyr::filter(.data[["provider_id_type"]] == "icc_security_id") %>%
     dplyr::filter(.data[["factset_id_type"]] == "fsym_security_id") %>%
     dplyr::filter(!is.na(.data[["factset_id"]])) %>%
@@ -66,8 +67,7 @@ get_iss_emissions_data <- function(
   # get the factset_entity_id to icc_total_emissions data --------------------
 
   logger::log_trace("Accessing ICC emissions data.")
-  icc_total_emissions <-
-    dplyr::tbl(conn, "icc_v2_icc_carbon_climate_core") %>%
+  icc_total_emissions <- dplyr::tbl(conn, "icc_v2_icc_carbon_climate_core") %>%
     dplyr::filter(
       .data[["icc_emissions_fiscal_year"]] == .env[["reporting_year"]]
     ) %>%
@@ -115,8 +115,7 @@ get_iss_emissions_data <- function(
   # collect the data, then disconnect ----------------------------------------
 
   logger::log_trace("Downloading emissions data.")
-  icc_total_emissions <-
-    icc_total_emissions %>%
+  icc_total_emissions <- icc_total_emissions %>%
     dplyr::collect()
 
   # return the factset_entity_id to icc_total_emissions data -----------------
