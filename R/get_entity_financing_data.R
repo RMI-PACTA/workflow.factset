@@ -71,7 +71,7 @@ get_entity_financing_data <- function(
       by = c("fsym_id", "date", "currency")
     ) %>%
     dplyr::left_join(fsym_company_id, by = "fsym_id") %>%
-    dplyr::inner_join(sec_entity, by = c("fsym_company_id" = "fsym_id")) %>%
+    dplyr::inner_join(sec_entity, by = c(fsym_company_id = "fsym_id")) %>%
     dplyr::filter(!(is.na(.data$ff_mkt_val) & is.na(.data$ff_debt))) %>%
     dplyr::group_by(.data$fsym_id, .data$currency) %>%
     dplyr::filter(.data$date <= .env$data_timestamp) %>%

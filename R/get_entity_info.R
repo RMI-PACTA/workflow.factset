@@ -47,7 +47,7 @@ get_entity_info <-
       sector_code %>%
       dplyr::left_join(
         sector_code__sector_desc,
-        by = c("sector_code" = "factset_sector_code")
+        by = c(sector_code = "factset_sector_code")
       ) %>%
       dplyr::select("factset_entity_id", "sector_code", "factset_sector_desc")
 
@@ -69,7 +69,7 @@ get_entity_info <-
       industry_code %>%
       dplyr::left_join(
         industry_code__industry_desc,
-        by = c("industry_code" = "factset_industry_code")
+        by = c(industry_code = "factset_industry_code")
       ) %>%
       dplyr::select(
         "factset_entity_id",

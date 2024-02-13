@@ -69,7 +69,7 @@ get_financial_data <-
     logger::log_trace("Accessing ADR equivilents.")
     one_adr_eq <-
       dplyr::tbl(conn, "own_v5_own_sec_adr_ord_ratio") %>%
-      dplyr::select("fsym_id" = "adr_fsym_id", "one_adr_eq")
+      dplyr::select(fsym_id = "adr_fsym_id", "one_adr_eq")
 
 
     # merge and collect --------------------------------------------------------

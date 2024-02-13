@@ -79,7 +79,7 @@ get_fund_data <- function(conn, data_timestamp) {
       .data$total_reported_mv != 0 | !is.na(.data$total_reported_mv)
     ) %>%
     dplyr::left_join(fund_holding, by = "factset_fund_id") %>%
-    dplyr::left_join(fsym_id__isin, by = c(`holding_fsym_id` = "fsym_id")) %>%
+    dplyr::left_join(fsym_id__isin, by = c(holding_fsym_id = "fsym_id")) %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
       fund_reported_mv = "total_reported_mv",
