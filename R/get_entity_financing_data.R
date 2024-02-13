@@ -86,8 +86,8 @@ get_entity_financing_data <- function(
     dplyr::collect() %>%
     dplyr::mutate(
       # convert units from millions to units
-      ff_mkt_val = .data$ff_mkt_val * 1e6,
-      ff_debt = .data$ff_debt * 1e6
+      ff_mkt_val = .data$ff_mkt_val * 1e6L,
+      ff_debt = .data$ff_debt * 1e6L
     ) %>%
     dplyr::distinct()
 
