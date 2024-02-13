@@ -10,8 +10,10 @@
 #'
 #' @export
 
-get_financial_data <-
-  function(conn, data_timestamp, ...) {
+get_financial_data <- function(
+  conn,
+  data_timestamp
+) {
     # build connection to database ---------------------------------------------
 
     logger::log_debug("Extracting financial info from database.")

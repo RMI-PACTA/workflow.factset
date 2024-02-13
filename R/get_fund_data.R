@@ -10,7 +10,10 @@
 #'
 #' @export
 
-get_fund_data <- function(conn, data_timestamp) {
+get_fund_data <- function(
+  conn,
+  data_timestamp
+) {
   # get the fund holdings and the holdings' reported market value ------------
 
   logger::log_debug("Extracting financial info from database.")

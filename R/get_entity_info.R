@@ -8,8 +8,7 @@
 #'
 #' @export
 
-get_entity_info <-
-  function(conn) {
+get_entity_info <- function(conn) {
     # build connection to database ---------------------------------------------
 
     logger::log_debug("Extracting entity info from database.")
