@@ -73,13 +73,13 @@ reg_conn_finalizer <- function(
 
   if (isTRUE(is_parent_global)) {
     env_finalizer <- new.env(parent = emptyenv())
-    env_finalizer$conn <- conn
+    env_finalizer[["conn"]] <- conn
     attr(conn, "env_finalizer") <- env_finalizer
 
     reg.finalizer(env_finalizer, function(e) {
-      if (DBI::dbIsValid(e$conn)) {
-        warn_db_autoclose(e$conn)
-        try(close_fun(e$conn))
+      if (DBI::dbIsValid(e[["conn"]])) {
+        warn_db_autoclose(e[["conn"]])
+        try(close_fun(e[["conn"]]))
       }
     },
     onexit = TRUE
@@ -102,8 +102,8 @@ reg_conn_finalizer <- function(
 }
 
 warn_db_autoclose <- function(conn) {
-  dbname <- DBI::dbGetInfo(conn)$dbname
-  host <- DBI::dbGetInfo(conn)$host
+  dbname <- DBI::dbGetInfo(conn)[["dbname"]]
+  host <- DBI::dbGetInfo(conn)[["host"]]
   logger::log_warn(
     "The database connection to ",
     dbname,

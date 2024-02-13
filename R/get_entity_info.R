@@ -40,7 +40,7 @@ get_entity_info <-
     logger::log_trace("Accessing sector descriptions.")
     sector_code__sector_desc <-
       dplyr::tbl(conn, "ref_v2_factset_sector_map") %>%
-      dplyr::select(.data$factset_sector_code, .data$factset_sector_desc)
+      dplyr::select(.data[["factset_sector_code"]], .data[["factset_sector_desc"]])
 
     logger::log_trace("Merging sector codes and sector descriptions.")
     factset_sector_desc <-
@@ -95,9 +95,9 @@ get_entity_info <-
     logger::log_trace("Determining last update time for entity affiliates.")
     affiliates_last_update <-
       dplyr::tbl(conn, "fds_fds_file_history") %>%
-      dplyr::filter(.data$table_name == "ent_entity_affiliates") %>%
+      dplyr::filter(.data[["table_name"]] == "ent_entity_affiliates") %>%
       dplyr::filter(
-        .data$begin_time == max(.data$begin_time, na.rm = TRUE)
+        .data[["begin_time"]] == max(.data[["begin_time"]], na.rm = TRUE)
       ) %>%
       # pull also handles `collect`ing the data
       dplyr::pull("begin_time")
@@ -106,7 +106,7 @@ get_entity_info <-
     credit_parent_id <-
       ent_v1_ent_entity_affiliates %>%
       dplyr::left_join(ref_v2_affiliate_type_map, by = "aff_type_code") %>%
-      dplyr::filter(.data$aff_type_desc == "Credit Risk Parent") %>%
+      dplyr::filter(.data[["aff_type_desc"]] == "Credit Risk Parent") %>%
       dplyr::select(
         factset_entity_id = "factset_affiliated_entity_id",
         credit_parent_id = "factset_entity_id"

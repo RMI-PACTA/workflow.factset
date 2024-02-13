@@ -40,7 +40,7 @@ get_financial_data <-
     )
     adj_price <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
-      dplyr::filter(.data$price_date == .env$data_timestamp) %>%
+      dplyr::filter(.data[["price_date"]] == .env[["data_timestamp"]]) %>%
       dplyr::select("fsym_id", "adj_price")
 
 
@@ -52,7 +52,7 @@ get_financial_data <-
     )
     adj_shares_outstanding <-
       dplyr::tbl(conn, "own_v5_own_sec_prices") %>%
-      dplyr::filter(.data$price_date == .env$data_timestamp) %>%
+      dplyr::filter(.data[["price_date"]] == .env[["data_timestamp"]]) %>%
       dplyr::select("fsym_id", "adj_shares_outstanding")
 
 

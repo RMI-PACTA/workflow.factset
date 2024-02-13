@@ -22,7 +22,7 @@ get_fund_data <- function(conn, data_timestamp) {
   )
   fund_security <-
     dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
-    dplyr::filter(.data$report_date == .env$data_timestamp) %>%
+    dplyr::filter(.data[["report_date"]] == .env[["data_timestamp"]]) %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
       holding_fsym_id = "fsym_id",
@@ -35,7 +35,7 @@ get_fund_data <- function(conn, data_timestamp) {
   )
   fund_nonsecurity <-
     dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
-    dplyr::filter(.data$report_date == .env$data_timestamp) %>%
+    dplyr::filter(.data[["report_date"]] == .env[["data_timestamp"]]) %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
       holding_fsym_id = "generic_id",
@@ -60,7 +60,7 @@ get_fund_data <- function(conn, data_timestamp) {
   )
   fund_mv <-
     dplyr::tbl(conn, "own_v5_own_ent_fund_filing_hist") %>%
-    dplyr::filter(.data$report_date == .env$data_timestamp) %>%
+    dplyr::filter(.data[["report_date"]] == .env[["data_timestamp"]]) %>%
     dplyr::select("factset_fund_id", "total_reported_mv")
 
 
@@ -76,7 +76,7 @@ get_fund_data <- function(conn, data_timestamp) {
   fund_data <-
     fund_mv %>%
     dplyr::filter(
-      .data$total_reported_mv != 0L | !is.na(.data$total_reported_mv)
+      .data[["total_reported_mv"]] != 0L | !is.na(.data[["total_reported_mv"]])
     ) %>%
     dplyr::left_join(fund_holding, by = "factset_fund_id") %>%
     dplyr::left_join(fsym_id__isin, by = c(holding_fsym_id = "fsym_id")) %>%
