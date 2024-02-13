@@ -231,13 +231,13 @@ export_pacta_files <- function(
   }
 
   filepaths <- c(
-    financial_data_path = financial_data_path,
-    entity_info_path = entity_info_path,
     entity_financing_data_path = entity_financing_data_path,
+    entity_ids_path = entity_ids_path,
+    entity_info_path = entity_info_path,
+    financial_data_path = financial_data_path,
     fund_data_path = fund_data_path,
     isin_to_fund_table_path = isin_to_fund_table_path,
     iss_emissions_path = iss_emissions_path,
-    entity_ids_path = entity_ids_path,
     issue_code_bridge_path = issue_code_bridge_path
   )
 
