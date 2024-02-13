@@ -62,7 +62,7 @@ export_pacta_files <- function(
 
   start_time_chr <- Sys.getenv(
     "DEPLOY_START_TIME",
-    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC"),
+    format(Sys.time(), format = "%Y%m%dT%H%M%SZ", tz = "UTC")
   )
 
   if (inherits(data_timestamp, "character")) {
