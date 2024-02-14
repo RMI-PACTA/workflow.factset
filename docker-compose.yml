@@ -1,0 +1,34 @@
+---
+services:
+  workflow.factset:
+    build: .
+    stdin_open: true
+    tty: true
+    command: ["R"]
+    environment:
+      DATA_TIMESTAMP: 20221231
+      DEPLOY_START_TIME: 20000101T000001
+      EXPORT_DESTINATION: /mnt/factset-loader
+      LOG_LEVEL: TRACE
+      MACHINE_CORES: 1
+      PGDATABASE: FDS
+      PGHOST: db
+      PGPASSWORD: SuperSecret1234
+      PGUSER: postgres
+    volumes:
+      - type: bind
+        source: ./outputs
+        target: /mnt/factset-extracted
+        read_only: false
+
+  db:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: SuperSecret1234
+      POSTGRES_USER: postgres
+      POSTGRES_DB: FDS
+    volumes:
+      - type: bind
+        source: ./tests/sql/
+        target: /docker-entrypoint-initdb.d
+        read_only: true
