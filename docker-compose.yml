@@ -17,7 +17,7 @@ services:
       PGUSER: postgres
     volumes:
       - type: bind
-        source: ./outputs
+        source: ./factset-extracted
         target: /mnt/factset-extracted
         read_only: false
 
