@@ -8,14 +8,34 @@ export_pacta_files(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  iss_reporting_year = Sys.getenv("ISS_REPORTING_YEAR", ""),
+  create_tar = TRUE,
+  wait_for_update = as.logical(Sys.getenv("UPDATE_DB", FALSE)),
+  wait_file = file.path(Sys.getenv("WORKINGSPACEPATH"), "done_loader"),
   terminate_connection = (deparse(substitute(conn)) ==
     formals(export_pacta_files)[["conn"]])
 )
 }
 \arguments{
+\item{conn}{DBI connection object.}
+
 \item{destination}{path to directory where exported files will be saved}
 
 \item{data_timestamp}{filter data as-of this timestamp}
+
+\item{iss_reporting_year}{Reporting year for ISS emissions data}
+
+\item{create_tar}{Flag to create .tar.gz file of exported files}
+
+\item{wait_for_update}{Wait for \code{wait_file} to exist before exporting.
+Useful when run in conjunction with factset data loader}
+
+\item{wait_file}{Path to file that indicates that the database update is
+complete.}
+
+\item{terminate_connection}{Flag to terminate connection, rather than let
+finalizer close db connection. Allows for early termination of connection
+before exporting tar file or metadata.}
 
 \item{Destination}{directory for the output files}
 }
