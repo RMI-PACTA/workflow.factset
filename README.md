@@ -151,7 +151,21 @@ az deployment group create --resource-group "$RESOURCEGROUP" --template-file azu
 
 ```
 
-## Local Testing
+## Local Development
+
+### Build
+
+Note that the image supports `amd64` platforms.
+If you are running on an `arm64` machine (Apple Silicon), you may need to change the preferrred build platform with:
+
+```sh
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+```
+
+To build the image, you can use the standard mechanism of `docker build .`.
+To build and test in one step, you can alternately use `docker-compose up --build`
+
+### Testing
 
 Partial (manual) local testing is possible via `docker-compose`.
 Currently `get_issue_code_bridge()` is the sole function with necessary testing infrastructure.
