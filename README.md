@@ -151,6 +151,52 @@ az deployment group create --resource-group "$RESOURCEGROUP" --template-file azu
 
 ```
 
+## Local Development
+
+### Build
+
+Note that the image supports `amd64` platforms.
+If you are running on an `arm64` machine (Apple Silicon), you may need to change the preferrred build platform with:
+
+```sh
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+```
+
+To build the image, you can use the standard mechanism of `docker build .`.
+To build and test in one step, you can alternately use `docker-compose up --build`
+
+### Testing
+
+Partial (manual) local testing is possible via `docker-compose`.
+Currently `get_issue_code_bridge()` is the sole function with necessary testing infrastructure.
+
+Testing Steps:
+
+```sh
+docker-compose up
+```
+
+```sh
+# in another terminal:
+docker attach workflowfactset-workflow.factset-1 # enters the workflow.factset container
+```
+
+This enters the container, which is running R in an interactive session
+
+```r
+#in that container
+library(workflow.factset)
+conn <- connect_factset_db()
+issue_code_bridge <- get_issue_code_bridge(conn = conn)
+issue_code_bridge
+```
+
+From here, you can exit R as usual (`q()`), and then turn off the database container with:
+
+```sh
+docker-compose down --volumes
+```
+
 ## Exported Files
 
 The files exported by `workflow.factset::export_pacta_files()` are:
