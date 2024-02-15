@@ -50,7 +50,7 @@ get_manual_sector_override <- function(conn) {
 
   incomplete_cases <- dplyr::filter(
     pacta_sector_override,
-    is.na(.data[['factset_entity_id']])
+    is.na(.data[["factset_entity_id"]])
   )
 
   if (nrow(incomplete_cases) > 0L) {
@@ -61,6 +61,24 @@ get_manual_sector_override <- function(conn) {
       "Company could not be matched by name in FactSet database: %s",
       incomplete_cases[["factset_company_name"]]
     )
+    logger::log_formatter(old_formatter)
+  }
+
+  multiple_matches <- pacta_sector_override %>%
+    dplyr::group_by(.data[["factset_company_name"]]) %>%
+    dplyr::filter(dplyr::n() > 1L)
+
+  if (nrow(multiple_matches) > 0L) {
+    # converting to formatter sprintf to deal with strings that break {glue}
+    old_formatter <- logger::log_formatter()
+    logger::log_formatter(logger::formatter_sprintf)
+    for (i in seq(1L, nrow(multiple_matches), 1L)) {
+      logger::log_warn(
+        "Company matched to multiple entity IDs in FactSet database: %s: %s",
+        multiple_matches[i, "factset_entity_id"],
+        multiple_matches[i, "factset_company_name"]
+      )
+    }
     logger::log_formatter(old_formatter)
   }
 
