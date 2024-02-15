@@ -44,6 +44,22 @@ get_manual_sector_override <- function(conn) {
     by = dplyr::join_by("entity_proper_name")
   )
 
+  incomplete_cases <- dplyr::filter(
+    pacta_sector_override,
+    !complete.cases(pacta_sector_override)
+  )
+
+  if (nrow(incomplete_cases) > 0L) {
+    # converting to formatter sprintf to deal with strings that break {glue}
+    old_formatter <- logger::log_formatter()
+    logger::log_formatter(logger::formatter_sprintf)
+    logger::log_warn(
+      "Company could not be matched by name in FactSet database: %s",
+      incomplete_cases[["entity_proper_name"]]
+    )
+    logger::log_formatter(old_formatter)
+  }
+
   # return prepared data -----------------------------------------------------
   return(pacta_sector_override)
 }
