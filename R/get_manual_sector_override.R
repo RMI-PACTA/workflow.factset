@@ -41,9 +41,25 @@ get_manual_sector_override <- function(conn) {
   pacta_sector_override <- dplyr::full_join(
     x = factset_entity_info,
     y = pacta_override_mapping,
-    by = dplyr::join_by("entity_proper_name")
+    by = dplyr::join_by("entity_proper_name"),
+    multiple = "all"
   ) %>%
-    dplyr::rename(
+    dplyr::mutate(
+      fs_entity_id_md5 = vapply(
+        X = .data[["factset_entity_id"]],
+        FUN = digest::digest,
+        FUN.VALUE = character(1L),
+        algo = "md5",
+        serialize = FALSE
+      )
+    ) %>%
+    dplyr::mutate(
+      keep_row = is.na(.data[["entity_id_md5"]]) |
+        (.data[["fs_entity_id_md5"]] == .data[["entity_id_md5"]])
+    ) %>%
+    filter(.data[["keep_row"]]) %>%
+    dplyr::select(
+      factset_entity_id = "factset_entity_id",
       factset_company_name = "entity_proper_name",
       pacta_sector_override = "pacta_sector"
     )
