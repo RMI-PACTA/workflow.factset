@@ -57,7 +57,7 @@ get_manual_sector_override <- function(conn) {
       keep_row = is.na(.data[["entity_id_md5"]]) |
         (.data[["fs_entity_id_md5"]] == .data[["entity_id_md5"]])
     ) %>%
-    filter(.data[["keep_row"]]) %>%
+    dplyr::filter(.data[["keep_row"]]) %>%
     dplyr::select(
       factset_entity_id = "factset_entity_id",
       factset_company_name = "entity_proper_name",
