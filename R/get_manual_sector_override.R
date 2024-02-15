@@ -98,8 +98,6 @@ get_manual_sector_override <- function(conn) {
     logger::log_formatter(old_formatter)
   }
 
-  browser()
-
   # return prepared data -----------------------------------------------------
   return(pacta_sector_override)
 }
@@ -601,6 +599,5 @@ pacta_override_mapping <- tibble::tribble(
   "Dalmia Bharat Ltd.", "Cement", NA,
   "EuroSite Power, Inc.", "Power", NA,
   "Oando Plc", "Oil&Gas", NA,
-  "FooBar Alex Axthelm", "Other", NA,
   "Tlou Energy Ltd.", "Oil&Gas", NA
 )
