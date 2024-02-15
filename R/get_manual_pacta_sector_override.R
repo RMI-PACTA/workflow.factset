@@ -42,6 +42,10 @@ get_manual_sector_override <- function(conn) {
     x = factset_entity_info,
     y = pacta_override_mapping,
     by = dplyr::join_by("entity_proper_name")
+  ) %>%
+  dplyr::rename(
+    factset_company_name = "entity_proper_name",
+    pacta_sector_override = "pacta_sector"
   )
 
   incomplete_cases <- dplyr::filter(
