@@ -50,7 +50,7 @@ get_manual_sector_override <- function(conn) {
 
   incomplete_cases <- dplyr::filter(
     pacta_sector_override,
-    !complete.cases(pacta_sector_override)
+    is.na(.data[['factset_entity_id']])
   )
 
   if (nrow(incomplete_cases) > 0L) {
@@ -59,10 +59,12 @@ get_manual_sector_override <- function(conn) {
     logger::log_formatter(logger::formatter_sprintf)
     logger::log_warn(
       "Company could not be matched by name in FactSet database: %s",
-      incomplete_cases[["entity_proper_name"]]
+      incomplete_cases[["factset_company_name"]]
     )
     logger::log_formatter(old_formatter)
   }
+
+  browser()
 
   # return prepared data -----------------------------------------------------
   return(pacta_sector_override)
