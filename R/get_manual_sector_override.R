@@ -194,7 +194,7 @@ pacta_override_mapping <- tibble::tribble(
   "Steel Capital SA", "Steel", NA,
   "Glencore Finance (Europe) Ltd.", "Coal", NA,
   "Saudi Electricity Global Sukuk Co. - 4", "Power", NA,
-  "Mercedes-Benz Australia/Pacific Pty Ltd.", "Other", NA,
+  "Mercedes-Benz Australia/Pacific Pty Ltd.", "Other", NA, # nolint: nonportable_path_linter
   "Volkswagen Financial Services NV", "Other", NA,
   "Voyage Bonds Ltd.", "Steel", NA,
   "Genneia SA", "Power", NA,
@@ -252,7 +252,7 @@ pacta_override_mapping <- tibble::tribble(
   "Continental Airlines Pass Through Certificates Ser 2012-2", "Aviation", NA,
   "Holcim Finance (Luxembourg) SA", "Cement", NA,
   "Abu Dhabi National Energy Co. PJSC", "Power", NA,
-  "China Huaneng Group Treasury Management (Hong Kong) Ltd.", "Power",  "94861e52fe0e1b3cc7a86d14c71d643b",
+  "China Huaneng Group Treasury Management (Hong Kong) Ltd.", "Power",  "94861e52fe0e1b3cc7a86d14c71d643b", # nolint: line_length_linter
   "Hrvatska Elektroprivreda dd", "Power", NA,
   "GE Capital International Funding Company Unlimited Co.", "Power", NA,
   "RGS I&M Funding Corp.", "Power", NA,
@@ -271,7 +271,7 @@ pacta_override_mapping <- tibble::tribble(
   "SCE Trust V", "Power", NA,
   "Gaz Finance Plc", "Oil&Gas", NA,
   "American President Cos. Ltd.", "Shipping", NA,
-  "Continental Airlines Pass Through Certificates Series 2001-1", "Aviation", NA,
+  "Continental Airlines Pass Through Certificates Series 2001-1", "Aviation", NA, #nolint: line_length_linter
   "CNOOC Finance (2011) Ltd.", "Oil&Gas", NA,
   "American Airlines 2017-1 Pass Through Trust", "Aviation", NA,
   "United Airlines Pass Through Certificate Series 2019-2", "Aviation", NA,
@@ -300,7 +300,7 @@ pacta_override_mapping <- tibble::tribble(
   "CRH Finland Services Oyj", "Cement", NA,
   "Saudi Electricity Global Sukuk Co.", "Power", NA,
   "Zim Shipping Ltd.", "Shipping", NA,
-  "UtiliCorp United, Inc. /Old/", "Power", NA,
+  "UtiliCorp United, Inc. /Old/", "Power", NA, # nolint: nonportable_path_linter
   "Holcim Sterling Finance (Netherlands) BV", "Cement", NA,
   "Toyota Leasing (Thailand) Co., Ltd.", "Other", NA,
   "CNOOC Finance (2013) Ltd.", "Oil&Gas", NA,
@@ -355,13 +355,13 @@ pacta_override_mapping <- tibble::tribble(
   "Indian Oil Corp. Ltd.", "Oil&Gas", NA,
   "APLP Holdings LP", "Power", NA,
   "Watercraft Capital SA", "Power", NA,
-  "Votorantim Cimentos N/NE SA", "Cement", NA,
+  "Votorantim Cimentos N/NE SA", "Cement", NA, # nolint: nonportable_path_linter
   "Naftogaz of Ukraine NJSC", "Oil&Gas", NA,
   "Sinosing Services Pte Ltd.", "Power", NA,
   "Duke Energy Florida Project Finance LLC", "Power", NA,
   "Yorkshire Power Finance Ltd.", "Power", NA,
   "Security Capital Group, Inc.", "Power", NA,
-  "Continental Airlines Pass Through Certificates Series 2007-1", "Aviation", NA,
+  "Continental Airlines Pass Through Certificates Series 2007-1", "Aviation", NA, #nolint: line_length_linter
   "UHI Capital Ltd.", "Power", NA,
   "TOTE Maritime Alaska, Inc.", "Shipping", NA,
   "CRH Finance Germany GmbH", "Cement", NA,
@@ -378,7 +378,7 @@ pacta_override_mapping <- tibble::tribble(
   "DPL Capital Trust II", "Power", NA,
   "PACCAR Financial México SA de CV", "Other", NA,
   "United Airlines Pass Through Trust Series 2014-2", "Aviation", NA,
-  "USX Corp. /Old/", "Oil&Gas", NA,
+  "USX Corp. /Old/", "Oil&Gas", NA, # nolint: nonportable_path_linter
   "Alaska Airlines 2020-1 Pass Thru Trust", "Aviation", NA,
   "ENI Coordination Center SA", "Oil&Gas", NA,
   "Oil India Ltd.", "Oil&Gas", NA,
@@ -395,7 +395,7 @@ pacta_override_mapping <- tibble::tribble(
   "Sinopec Century Bright Capital Investment Ltd.", "Oil&Gas", NA,
   "Eterna Capital Pte Ltd.", "Coal", NA,
   "Kraftwerke Oberhasli AG", "Power", NA,
-  "Continental Airlines Pass Through Certificates Series 2010-1", "Aviation", NA,
+  "Continental Airlines Pass Through Certificates Series 2010-1", "Aviation", NA, #nolint: line_length_linter
   "MP Environmental Funding Series A", "Power", NA,
   "Steel Funding DAC", "Steel", NA,
   "GE Capital Canada Funding Co.", "Power", NA,
@@ -428,7 +428,7 @@ pacta_override_mapping <- tibble::tribble(
   "SPIC 2016 US Dollar Bond Co. Ltd.", "Power", NA,
   "CRH SMW Finance DAC", "Cement", NA,
   "C10-EUR Capital (SPV) Ltd.", "Cement", NA,
-  "Continental Airlines Pass Through Certificates Ser 2005-ERJ1", "Aviation", NA,
+  "Continental Airlines Pass Through Certificates Ser 2005-ERJ1", "Aviation", NA, #nolint: line_length_linter
   "TerraForm Global Operating LLC", "Power", NA,
   "SPIC 2018 USD Senior Perpetual Bond Co. Ltd.", "Power", NA,
   "CRH Funding BV", "Cement", NA,
@@ -475,7 +475,7 @@ pacta_override_mapping <- tibble::tribble(
   "Unión Fenosa Preferentes SA", "Power", NA,
   "Hainan Airlines (Hong Kong) Co., Ltd.", "Aviation", NA,
   "Equatorial Transmissora 3 SPE SA", "Power", NA,
-  "Spirit Airlines Pass Through Trust Certificates Series 2015-1", "Aviation", NA,
+  "Spirit Airlines Pass Through Trust Certificates Series 2015-1", "Aviation", NA, #nolint: line_length_linter
   "United Airlines Pass Through Trust Series 2013-1", "Aviation", NA,
   "Vattenfall Treasury AB", "Power", NA,
   "United Air Lines 2007-1A Pass Through", "Aviation", NA,
@@ -565,5 +565,6 @@ pacta_override_mapping <- tibble::tribble(
   "Dalmia Bharat Ltd.", "Cement", NA,
   "EuroSite Power, Inc.", "Power", NA,
   "Oando Plc", "Oil&Gas", NA,
+  "FooBar Alex Axthelm", "Other", NA,
   "Tlou Energy Ltd.", "Oil&Gas", NA
 )
