@@ -203,6 +203,27 @@ export_pacta_files <- function(
   logger::log_info("Exporting Issue Code bridge to ", issue_code_bridge_path)
   saveRDS(object = issue_code_bridge, file = issue_code_bridge_path)
 
+  industry_map_bridge_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_industry_map_bridge.rds")
+  )
+  industry_map_bridge_csv_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_industry_map_bridge.csv")
+  )
+  logger::log_info("Fetching Industry Map bridge.")
+  industry_map_bridge <- get_industry_map_bridge(conn = conn)
+  logger::log_info(
+    "Exporting Industry Map bridge to ", industry_map_bridge_path
+  )
+  saveRDS(object = industry_map_bridge, file = industry_map_bridge_path)
+  write.csv(
+    x = industry_map_bridge,
+    file = industry_map_bridge_csv_path,
+    na = "",
+    row.names = FALSE
+  )
+
   # Note that this writes to CSV, not RDS.
   entity_ids_path <- file.path(
     export_dir,
@@ -236,6 +257,8 @@ export_pacta_files <- function(
     entity_info_path = entity_info_path,
     financial_data_path = financial_data_path,
     fund_data_path = fund_data_path,
+    industry_map_bridge_csv_path = industry_map_bridge_csv_path,
+    industry_map_bridge_path = industry_map_bridge_path,
     isin_to_fund_table_path = isin_to_fund_table_path,
     iss_emissions_path = iss_emissions_path,
     issue_code_bridge_path = issue_code_bridge_path
