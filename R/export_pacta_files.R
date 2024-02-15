@@ -194,6 +194,27 @@ export_pacta_files <- function(
   )
   saveRDS(object = iss_emissions, file = iss_emissions_path)
 
+  sector_override_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_manual_sector_override.rds")
+  )
+  sector_override_csv_path <- file.path(
+    export_dir,
+    paste0(unique_pull_string, "_factset_manual_sector_override.csv")
+  )
+  logger::log_info("Fetching manual sector override table.")
+  manual_sector_override <- get_manual_sector_override(conn = conn)
+  logger::log_info(
+    "Exporting Industry Map bridge to ", sector_override_path
+  )
+  saveRDS(object = manual_sector_override, file = sector_override_path)
+  write.csv(
+    x = manual_sector_override,
+    file = sector_override_csv_path,
+    na = "",
+    row.names = FALSE
+  )
+
   issue_code_bridge_path <- file.path(
     export_dir,
     paste0(unique_pull_string, "_factset_issue_code_bridge.rds")
@@ -238,7 +259,9 @@ export_pacta_files <- function(
     fund_data_path = fund_data_path,
     isin_to_fund_table_path = isin_to_fund_table_path,
     iss_emissions_path = iss_emissions_path,
-    issue_code_bridge_path = issue_code_bridge_path
+    issue_code_bridge_path = issue_code_bridge_path,
+    sector_override_path = sector_override_path,
+    sector_override_csv_path = sector_override_csv_path
   )
 
   manifest_path <- file.path(
