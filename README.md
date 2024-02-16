@@ -139,7 +139,7 @@ If you do not create this file, then the deploy process will prompt for values.
 
 ```sh
 # change this value as needed.
-RESOURCEGROUP="myResourceGroup"
+RESOURCEGROUP="RMI-SP-PACTA-DEV"
 
 # run from repo root
 
