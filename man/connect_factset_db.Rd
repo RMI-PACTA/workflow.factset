@@ -8,7 +8,7 @@ connect_factset_db(
   dbname = Sys.getenv("PGDATABASE"),
   host = Sys.getenv("PGHOST"),
   port = Sys.getenv("PGPORT", 5432L),
-  options = "-c search_path=fds",
+  db_options = "-c search_path=fds",
   username = Sys.getenv("PGUSER"),
   password = Sys.getenv("PGPASSWORD")
 )
@@ -20,12 +20,12 @@ connect_factset_db(
 
 \item{port}{port number of the server to connect to}
 
-\item{options}{additional options to pass to the database connection.
-Typically used to define schema search path.}
-
 \item{username}{username to use for the database connection}
 
 \item{password}{password to use for the database connection}
+
+\item{options}{additional options to pass to the database connection.
+Typically used to define schema search path.}
 }
 \value{
 a database connection object

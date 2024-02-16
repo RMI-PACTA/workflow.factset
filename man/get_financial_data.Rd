@@ -5,7 +5,7 @@
 \title{Get the factset financial data from the FactSet database and prepare the
 \code{factset_financial_data} tibble}
 \usage{
-get_financial_data(conn, data_timestamp, ...)
+get_financial_data(conn, data_timestamp)
 }
 \arguments{
 \item{conn}{databse connection}
