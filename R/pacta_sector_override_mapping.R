@@ -496,4 +496,3 @@ pacta_sector_override_mapping <- tibble::tribble(
   "Oando Plc", "Oil&Gas", NA,
   "Tlou Energy Ltd.", "Oil&Gas", NA
 )
-
