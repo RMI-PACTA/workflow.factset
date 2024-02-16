@@ -2,12 +2,6 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "dataTimestamp": {
-      "value": "20221231"
-    },
-    "issReportingYear": {
-      "value": "2021"
-    },
 
     "identity": {
       "value": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.ManagedIdentity/userAssignedIdentities/pacta-runner-dev"
