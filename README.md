@@ -1,8 +1,8 @@
-# workflow.pacta
+# workflow.factset
 
 This repo contains the `workflow.pacta` R package, a Dockerfile to build an image containing that package and its dependencies, and an Azure ARM template to deploy that image, along with [factset_data_loader](https://github.com/RMI-PACTA/factset_data_loader/) and a PostgreSQL database.
 
-**QUICKSTART**: See "Deploying" at the end of this file.
+**QUICKSTART**: See ["Deploy"](#Deploy), below.
 
 ## `workflow.factset` R package
 
@@ -137,18 +137,30 @@ Key variables to be aware of:
 Optional: Create a parameters file (`azure-deploy.example.parameters.json` serves as a template) for parameters that do not have a default.
 If you do not create this file, then the deploy process will prompt for values.
 
+A parameter file with the values that the RMI-PACTA team uses for extracting data is available at [`azure-deploy.rmi-pacta.parameters.json`](azure-deploy.rmi-pacta.parameters.json).
+
 ```sh
+# run from repo root
+
 # change this value as needed.
 RESOURCEGROUP="RMI-SP-PACTA-DEV"
 
-# run from repo root
+# Users with access to the RMI-PACTA Azure subscription can run:
+az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json --parameters azure-deploy.rmi-pacta.parameters.json
 
+```
+
+For security, the RMI-PACTA parameters file makes heavy use of extracting secrets from an Azure Key vault, but an example file that passes parameters "in the clear" is available as [`azure-deploy.example.parameters.json`](azure-deploy.example.parameters.json)
+
+Non RMI-PACTA users can define their own parameters and invoke the ARM Template with:
+
+```sh
+# Otherwise:
 # Prompts for parameters without defaults
 az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json 
 
-# or
+# if you have created your own parameters file:
 az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json --parameters @azure-deploy.parameters.json
-
 ```
 
 ## Local Development
