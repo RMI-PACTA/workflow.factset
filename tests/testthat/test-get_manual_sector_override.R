@@ -1,13 +1,13 @@
 test_that("Companies in override mapping are unique", {
   testthat::expect_identical(
-    pacta_sector_override_mapping[["entity_proper_name"]],
-    unique(pacta_sector_override_mapping[["entity_proper_name"]])
+    pacta_override_mapping[["entity_proper_name"]],
+    unique(pacta_override_mapping[["entity_proper_name"]])
   )
 })
 
 test_that("Sectors in override mapping are valid", {
   testthat::expect_in(
-    pacta_sector_override_mapping[["pacta_sector"]],
+    pacta_override_mapping[["pacta_sector"]],
     c(
       "Aviation",
       "Coal",
