@@ -1,0 +1,90 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dataTimestamp": {
+      "value": "20221231"
+    },
+    "issReportingYear": {
+      "value": "2021"
+    },
+
+    "identity": {
+      "value": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.ManagedIdentity/userAssignedIdentities/pacta-runner-dev"
+    },
+
+    "storageAccountKeyExtracted": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "rawdata-storageaccountkey"
+      }
+    },
+    "storageAccountNameExtracted": {
+      "value": "pactarawdata"
+    },
+    "storageAccountShareExtracted": {
+      "value": "factset-extracted"
+    },
+
+    "storageAccountKeyLoader": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "rawdata-storageaccountkey"
+      }
+    },
+    "storageAccountNameLoader": {
+      "value": "pactarawdata"
+    },
+    "storageAccountShareLoader": {
+      "value": "factset-loader"
+    },
+
+    "logWorkspaceId": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "LogWorkspaceID-Dev"
+      }
+    },
+    "logWorkspaceKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "LogWorkspaceKey-Dev"
+      }
+    },
+
+    "loaderFactsetSerial": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "factset-serial"
+      }
+    },
+    "loaderFactsetUsername": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "factset-username"
+      }
+    },
+
+    "PGPASSWORD": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/feef729b-4584-44af-a0f9-4827075512f9/resourceGroups/RMI-SP-PACTA-DEV/providers/Microsoft.KeyVault/vaults/pacta-vault-dev"
+        },
+        "secretName": "factset-database-password"
+      }
+    }
+
+  }
+}
