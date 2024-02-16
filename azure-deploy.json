@@ -106,12 +106,6 @@
         "description": "The time to start the container group."
       }
     },
-    "storageAccountKeyRawdata": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The storage account key for the rawdata storage account."
-      }
-    },
     "workspaceId": {
       "type": "string",
       "metadata": {
@@ -130,7 +124,47 @@
       "metadata": {
         "description": "Deploy Database and FDSLoader image to update the database."
       }
+    },
+
+
+    "storageAccountKeyExtracted": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The storage account key for the storage account for extracted files."
+      }
+    },
+    "storageAccountNameExtracted": {
+      "type": "string",
+      "metadata": {
+        "description": "The storage account name for the storage account for extracted files."
+      }
+    },
+    "storageAccountShareExtracted": {
+      "type": "string",
+      "metadata": {
+        "description": "The file share name for the extracted files."
+      }
+    },
+
+    "storageAccountKeyLoader": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The storage account key for the storage account for factset_data_loader."
+      }
+    },
+    "storageAccountNameLoader": {
+      "type": "string",
+      "metadata": {
+        "description": "The storage account name for the storage account for factset_data_loader."
+      }
+    },
+    "storageAccountShareLoader": {
+      "type": "string",
+      "metadata": {
+        "description": "The file share name for the factset_data_loader."
+      }
     }
+    
   },
 
   "variables": {
@@ -369,25 +403,25 @@
         "osType": "Linux",
         "volumes": [
           {
-            "name": "factset-extracted",
-            "azureFile": {
-              "shareName": "factset-extracted",
-              "readOnly": false,
-              "storageAccountName": "pactarawdata",
-              "storageAccountKey": "[parameters('storageAccountKeyRawdata')]"
-            }
-          },
-          {
             "name": "workingspace",
             "emptyDir": {}
           },
           {
+            "name": "factset-extracted",
+            "azureFile": {
+              "shareName": "[parameters('storageAccountShareExtracted')]]",
+              "readOnly": false,
+              "storageAccountName": "[parameters('storageAccountNameExtracted')]]",
+              "storageAccountKey": "[parameters('storageAccountKeyExtracted')]"
+            }
+          },
+          {
             "name": "factset-loader",
             "azureFile": {
-              "shareName": "factset-loader",
+              "shareName": "[parameters('storageAccountShareLoader')]]]",
               "readOnly": false,
-              "storageAccountName": "pactarawdata",
-              "storageAccountKey": "[parameters('storageAccountKeyRawdata')]"
+              "storageAccountName": "[parameters('storageAccountNameLoader')]]",
+              "storageAccountKey": "[parameters('storageAccountKeyLoader')]"
             }
           }
         ]
