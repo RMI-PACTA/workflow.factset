@@ -399,7 +399,7 @@
         "diagnostics": {
           "logAnalytics": {
             "logType": "ContainerInstanceLogs",
-            "workspaceId": "[parameters('logWorkspaceId')]]",
+            "workspaceId": "[parameters('logWorkspaceId')]",
             "workspaceKey": "[parameters('logWorkspaceKey')]"
           }
         },
@@ -415,18 +415,18 @@
           {
             "name": "factset-extracted",
             "azureFile": {
-              "shareName": "[parameters('storageAccountShareExtracted')]]",
+              "shareName": "[parameters('storageAccountShareExtracted')]",
               "readOnly": false,
-              "storageAccountName": "[parameters('storageAccountNameExtracted')]]",
+              "storageAccountName": "[parameters('storageAccountNameExtracted')]",
               "storageAccountKey": "[parameters('storageAccountKeyExtracted')]"
             }
           },
           {
             "name": "factset-loader",
             "azureFile": {
-              "shareName": "[parameters('storageAccountShareLoader')]]]",
+              "shareName": "[parameters('storageAccountShareLoader')]",
               "readOnly": false,
-              "storageAccountName": "[parameters('storageAccountNameLoader')]]",
+              "storageAccountName": "[parameters('storageAccountNameLoader')]",
               "storageAccountKey": "[parameters('storageAccountKeyLoader')]"
             }
           }
