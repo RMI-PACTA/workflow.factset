@@ -187,22 +187,29 @@
     "dbServerName": "[concat(parameters('containerGroupName'), '-postgres')]",
     "dbSkuSizeGB": 512,
     "machineCpuCoresLimitLoader": 3,
-    "machineCpuCoresLimitWorkflow": 2,
-    "machineCpuCoresRequestLoader": 2,
-    "machineCpuCoresRequestWorkflow": 1,
+    "machineCpuCoresLimitWorkflow": "[div(4, length(variables('dataTimestampArray')))]",
+    "machineCpuCoresRequestLoader": 1,
+    "machineCpuCoresRequestWorkflow": "[max(1, div(3, length(variables('dataTimestampArray'))))]",
     "machineMemoryInGBLimitLoader": 6,
-    "machineMemoryInGBLimitWorkflow": 16,
+    "machineMemoryInGBLimitWorkflow": "[div(16, length(variables('dataTimestampArray')))]",
     "machineMemoryInGBRequestLoader": 4,
-    "machineMemoryInGBRequestWorkflow": 12,
+    "machineMemoryInGBRequestWorkflow": "[div(12, length(variables('dataTimestampArray')))]",
     "mountPathExport": "/mnt/factset-extracted",
     "mountPathFDSLoader": "/mnt/factset-loader",
     "mountPathWorkingSpace": "/mnt/workingspace",
     "postgresVersion": "14",
 
+
+    "dataTimestampArray" : "[split(parameters('dataTimestamp'), ',')]",
+    "issReportingYearArray" : "[split(parameters('issReportingYear'), ',')]",
+
     "emptyArray": [],
-    "ContainerDefinitionWorkflow":[
+    "copy": [
       {
-        "name": "workflow-factset",
+      "name": "ContainerDefinitionWorkflow",
+      "count": "[length(variables('dataTimestampArray'))]",
+      "input": {
+        "name": "[toLower(concat('workflow-factset', padLeft(copyIndex('ContainerDefinitionWorkflow'), 2, '0')))]",
         "properties": {
           "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
           "ports": [],
@@ -251,11 +258,11 @@
             },
             {
               "name": "DATA_TIMESTAMP",
-              "value": "[parameters('dataTimestamp')]"
+              "value": "[variables('dataTimestampArray')[copyIndex('ContainerDefinitionWorkflow')]]"
             },
             {
               "name": "ISS_REPORTING_YEAR",
-              "value": "[parameters('issReportingYear')]"
+              "value": "[variables('issReportingYearArray')[copyIndex('ContainerDefinitionWorkflow')]]"
             },
             {
               "name": "UPDATE_DB",
@@ -277,6 +284,7 @@
             }
           ]
         }
+      }
       }
     ],
     "ContainerDefinitionLoader": [
