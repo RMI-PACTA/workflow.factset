@@ -120,13 +120,13 @@
       }
     },
 
-    "workspaceId": {
+    "logWorkspaceId": {
       "type": "string",
       "metadata": {
         "description": "The ID for a Log Analytics Workspace."
       }
     },
-    "workspaceKey": {
+    "logWorkspaceKey": {
       "type": "securestring",
       "metadata": {
         "description": "The key for a Log Analytics Workspace."
@@ -399,8 +399,8 @@
         "diagnostics": {
           "logAnalytics": {
             "logType": "ContainerInstanceLogs",
-            "workspaceId": "[parameters('workspaceId')]]",
-            "workspaceKey": "[parameters('workspaceKey')]"
+            "workspaceId": "[parameters('logWorkspaceId')]]",
+            "workspaceKey": "[parameters('logWorkspaceKey')]"
           }
         },
         "containers":
