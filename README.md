@@ -104,6 +104,7 @@ All parameters must have values, but most have sensible defaults already defined
 * `PGPASSWORD`: Database Server Password
 * `containerGroupName`: Used to define the container group name, and by default the DB server name will have this appended with `-postgres`.
 * `dataTimestamp`: Passed to containers as $DATA_TIMESTAMP environment variable.
+  * This parameter can accept a comma separated list (`20221231,20231231`) to allow for multiple instance of `workflow.factset` to run simultaneously.
 * `identity`: See "Identity" in "Prerequisites", above.
 * `imageTagLoader`: (default: `main`) tag used for `factset_data_loader` image from `ghcr.io`
 * `imageTagWorkflow`: (default: `main`) tag used for `workflow.pacta` image from `ghcr.io`
@@ -138,6 +139,11 @@ Optional: Create a parameters file (`azure-deploy.example.parameters.json` serve
 If you do not create this file, then the deploy process will prompt for values.
 
 A parameter file with the values that the RMI-PACTA team uses for extracting data is available at [`azure-deploy.rmi-pacta.parameters.json`](azure-deploy.rmi-pacta.parameters.json).
+
+Note: the `dataTimestamp` and `issReportingYear` parameters accept comma separated lists (which must be of equal length).
+For example: `20221231,20231231` and `2021,2022`.
+If deployed with such parameters, the deploy template will include a container running `workflow.factset` for each index pair (`20221231` with reporting year `2021`, and `20231231` with `2022`).
+
 
 ```sh
 # run from repo root
