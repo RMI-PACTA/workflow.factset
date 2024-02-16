@@ -12,7 +12,7 @@
 #'
 #' @keywords internal
 
-pacta_override_mapping <- tibble::tribble(
+pacta_sector_override_mapping <- tibble::tribble(
   ~entity_proper_name, ~pacta_sector, ~entity_id_md5,
   "St. Marys Cement Inc. (Canada)", "Cement", NA,
   "Volkswagen Group of America Finance LLC", "Other", NA,

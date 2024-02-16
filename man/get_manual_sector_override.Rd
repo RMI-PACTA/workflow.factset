@@ -4,10 +4,16 @@
 \alias{get_manual_sector_override}
 \title{Get the PACTA manual sector override table}
 \usage{
-get_manual_sector_override(conn)
+get_manual_sector_override(
+  conn,
+  override_mapping = pacta_sector_override_mapping
+)
 }
 \arguments{
 \item{conn}{database connection}
+
+\item{override_mapping}{\code{data.frame}-ish object with same format as
+\code{pacta_sector_override_mapping}}
 }
 \value{
 A tibble properly prepared to be saved as the

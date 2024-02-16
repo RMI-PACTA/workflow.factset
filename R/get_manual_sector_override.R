@@ -1,13 +1,18 @@
 #' Get the PACTA manual sector override table
 #'
 #' @param conn database connection
+#' @param override_mapping `data.frame`-ish object with same format as
+#' `pacta_sector_override_mapping`
 #'
 #' @return A tibble properly prepared to be saved as the
 #'   `factset_manual_pacta_sector_override.rds` output file
 #'
 #' @export
 
-get_manual_sector_override <- function(conn) {
+get_manual_sector_override <- function(
+  conn,
+  override_mapping = pacta_sector_override_mapping
+) {
   # build connection to database ---------------------------------------------
 
   logger::log_debug("Extracting manual PACTA sector override table.")
@@ -18,7 +23,7 @@ get_manual_sector_override <- function(conn) {
   sym_entity <- dplyr::tbl(conn, "sym_v1_sym_entity")
 
   logger::log_trace("Preparing company names.")
-  company_names <- pacta_override_mapping[["entity_proper_name"]]
+  company_names <- override_mapping[["entity_proper_name"]]
 
   factset_entity_info <- sym_entity %>%
     dplyr::select(
@@ -40,7 +45,7 @@ get_manual_sector_override <- function(conn) {
   logger::log_trace("Adding PACTA sector overrides.")
   pacta_sector_override <- dplyr::full_join(
     x = factset_entity_info,
-    y = pacta_override_mapping,
+    y = override_mapping,
     by = dplyr::join_by("entity_proper_name"),
     multiple = "all"
   ) %>%
