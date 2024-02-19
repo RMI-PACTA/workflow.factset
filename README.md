@@ -102,7 +102,8 @@ All parameters must have values, but most have sensible defaults already defined
 
 * `PGHOSTOverride`: If `updateDB` is `false`, then this specifies the value of `$PGHOST` environment variable that `workflow.factset` will connect to.
 * `PGPASSWORD`: Database Server Password
-* `containerGroupName`: Used to define the container group name, and by default the DB server name will have this appended with `-postgres`.
+* `containerGroupName`: Label to define the container group name, and by default the DB server name will have this appended with `-postgres`.
+    Does not affect behavior of container, but note for later, so resources can be deleted/managed via Azure Portal or through `az`.
 * `dataTimestamp`: Passed to containers as $DATA_TIMESTAMP environment variable.
 * `identity`: See "Identity" in "Prerequisites", above.
 * `imageTagLoader`: (default: `main`) tag used for `factset_data_loader` image from `ghcr.io`
