@@ -1,6 +1,6 @@
 # workflow.factset
 
-This repo contains the `workflow.pacta` R package, a Dockerfile to build an image containing that package and its dependencies, and an Azure ARM template to deploy that image, along with [factset_data_loader](https://github.com/RMI-PACTA/factset_data_loader/) and a PostgreSQL database.
+This repo contains the `workflow.factset` R package, a Dockerfile to build an image containing that package and its dependencies, and an Azure ARM template to deploy that image, along with [factset_data_loader](https://github.com/RMI-PACTA/factset_data_loader/) and a PostgreSQL database.
 
 **QUICKSTART**: See ["Deploy"](#Deploy), below.
 
