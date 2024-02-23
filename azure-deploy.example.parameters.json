@@ -2,26 +2,54 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "identity": {
-      "value": "/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/MyResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyManagedIdentity"
-    },
-    "storageAccountKeyRawdata": {
-      "value": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=="
-    },
-    "loaderFactsetSerial": {
-      "value": "123456"
-    },
-    "loaderFactsetUsername": {
-      "value": "FS_USER"
-    },
     "dataTimestamp": {
       "value": "20221231"
     },
     "issReportingYear": {
       "value": "2021"
     },
+
+    "identity": {
+    "value": "/subscriptions/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/resourceGroups/MYRESOURCEGROUP/providers/Microsoft.ManagedIdentity/userAssignedIdentities/MyIdentity"
+    },
+
+    "storageAccountKeyExtracted": {
+      "value": "XXXXXXXX"
+    },
+    "storageAccountNameExtracted": {
+      "value": "mystorageaccount"
+    },
+    "storageAccountShareExtracted": {
+      "value": "factset-extracted"
+    },
+
+    "storageAccountKeyLoader": {
+      "value": "XXXXXXXX"
+    },
+    "storageAccountNameLoader": {
+      "value": "somestorageaccount"
+    },
+    "storageAccountShareLoader": {
+      "value": "loadershare"
+    },
+
+    "logWorkspaceId": {
+      "value": "XXXXXXXX"
+    },
+    "logWorkspaceKey": {
+      "value": "XXXXXXXX"
+    },
+
+    "loaderFactsetSerial": {
+      "value": "XXXXXXXX"
+    },
+    "loaderFactsetUsername": {
+      "value": "XXXXXXXX"
+    },
+
     "PGPASSWORD": {
-      "value": "Super5ecret!"
+      "value": "SuperSecret01!"
     }
+
   }
 }
