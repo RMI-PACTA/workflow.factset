@@ -81,9 +81,9 @@ export_pacta_files <- function(
   if (is.null(data_timestamp_lookback)) {
     logger::log_warn(
       "The data_timestamp_lookback argument is NULL. ",
-      "Using a lookback of 1 year."
+      "Using a lookback of 3 months."
     )
-    data_timestamp_lookback <- data_timestamp - lubridate::dyear(1L)
+    data_timestamp_lookback <- data_timestamp - lubridate::dmonths(3L)
   } else {
     data_timestamp_lookback <- lubridate::ymd_hms(
       data_timestamp_lookback,

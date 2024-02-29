@@ -30,7 +30,7 @@ get_fund_data <- function(
   fund_security <- dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
     dplyr::filter(.data[["report_date"]] <= .env[["data_timestamp"]]) %>%
     dplyr::filter(
-      .data[["report_date"]] > .env[["data_timestamp_lookback"]]
+      .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
     ) %>%
     dplyr::group_by(.data$factset_fund_id) %>%
     dplyr::filter(.data$report_date == max(.data$report_date, na.rm = TRUE)) %>%
@@ -49,7 +49,7 @@ get_fund_data <- function(
   fund_nonsecurity <- dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
     dplyr::filter(.data[["report_date"]] <= .env[["data_timestamp"]]) %>%
     dplyr::filter(
-      .data[["report_date"]] > .env[["data_timestamp_lookback"]]
+      .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
     ) %>%
     dplyr::group_by(.data$factset_fund_id) %>%
     dplyr::filter(.data$report_date == max(.data$report_date, na.rm = TRUE)) %>%
@@ -77,7 +77,7 @@ get_fund_data <- function(
   fund_mv <- dplyr::tbl(conn, "own_v5_own_ent_fund_filing_hist") %>%
     dplyr::filter(.data[["report_date"]] <= .env[["data_timestamp"]]) %>%
     dplyr::filter(
-      .data[["report_date"]] > .env[["data_timestamp_lookback"]]
+      .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
     ) %>%
     dplyr::group_by(.data$factset_fund_id) %>%
     dplyr::filter(.data$report_date == max(.data$report_date, na.rm = TRUE)) %>%
