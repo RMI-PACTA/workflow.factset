@@ -4,8 +4,6 @@
 #' @param conn databse connection
 #' @param data_timestamp A single string specifying the desired date for the
 #'   data in the form "2021-12-31"
-#' @param data_timestamp_lookback A single string specifying the oldest data
-#' that should be included in the output
 #'
 #' @return A tibble properly prepared to be saved as the
 #'   `factset_entity_financing_data.rds` output file
@@ -14,14 +12,12 @@
 
 get_entity_financing_data <- function(
   conn,
-  data_timestamp,
-  data_timestamp_lookback = data_timestamp - lubridate::dyears(1)
+  data_timestamp
 ) {
   # get fsym_id to fundamentals fsym_company_id --------------------------------
 
   logger::log_debug("Extracting entity financing info from database.")
   logger::log_debug("using data timestamp: ", data_timestamp)
-  logger::log_debug("Looking back in data to: ", data_timestamp_lookback)
 
   logger::log_trace("Accessing security map - FactSet Fundamentals.")
   ff_fsym_company_id <- dplyr::tbl(conn, "ff_v3_ff_sec_map")
@@ -53,14 +49,14 @@ get_entity_financing_data <- function(
 
   # get market value data ------------------------------------------------------
 
-  logger::log_trace("Accessing annual reporting period market value data.")
+  logger::log_trace("Accessing market value data.")
   ff_mkt_val <- dplyr::tbl(conn, "ff_v3_ff_basic_der_af") %>%
     dplyr::select("fsym_id", "date", "currency", "ff_mkt_val")
 
 
   # get debt outstanding data --------------------------------------------------
 
-  logger::log_trace("Accessing annual reporting period balance sheet data.")
+  logger::log_trace("Accessing balance sheet data.")
   ff_debt <- dplyr::tbl(conn, "ff_v3_ff_basic_af") %>%
     dplyr::select("fsym_id", "date", "currency", "ff_debt")
 
@@ -75,10 +71,7 @@ get_entity_financing_data <- function(
       by = c("fsym_id", "date", "currency")
     ) %>%
     dplyr::left_join(fsym_company_id, by = "fsym_id") %>%
-    dplyr::inner_join(sec_entity, by = c("fsym_company_id" = "fsym_id")) %>%
-    dplyr::filter(!(is.na(.data$ff_mkt_val) & is.na(.data$ff_debt))) %>%
-    dplyr::filter(.data$date <= .env$data_timestamp) %>%
-    dplyr::filter(.data$date >= .env$data_timestamp_lookback) %>%
+    dplyr::inner_join(sec_entity, by = c(fsym_company_id = "fsym_id")) %>%
     dplyr::filter(
       !(
         is.na(.data[["ff_mkt_val"]]) &
