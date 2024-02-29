@@ -89,7 +89,10 @@ get_fund_data <- function(
       fund_holding,
       by = dplyr::join_by("factset_fund_id", "report_date")
     ) %>%
-    dplyr::left_join(fsym_id__isin, by = c(holding_fsym_id = "fsym_id")) %>%
+    dplyr::left_join(
+      fsym_id__isin,
+      by = dplyr::join_by("holding_fsym_id" == "fsym_id")
+    ) %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
       fund_reported_mv = "total_reported_mv",
