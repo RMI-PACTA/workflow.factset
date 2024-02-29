@@ -27,8 +27,7 @@ get_fund_data <- function(
     "Accessing historical fund holdings - security level. ",
     "Filtering to date: ", data_timestamp
   )
-  fund_security <-
-    dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
+  fund_security <- dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
     dplyr::filter(.data$report_date <= .env$data_timestamp) %>%
     dplyr::group_by(.data$fsym_id, .data$factset_fund_id) %>%
     dplyr::filter(.data$price_date == max(.data$price_date)) %>%
@@ -47,8 +46,7 @@ get_fund_data <- function(
     "Accessing historical fund holdings - non-securities. ",
     "Filtering to date: ", data_timestamp
   )
-  fund_nonsecurity <-
-    dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
+  fund_nonsecurity <- dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
     dplyr::filter(.data$report_date <= .env$data_timestamp) %>%
     dplyr::group_by(.data$fsym_id, .data$generic_id) %>%
     dplyr::filter(.data$price_date == max(.data$price_date)) %>%
