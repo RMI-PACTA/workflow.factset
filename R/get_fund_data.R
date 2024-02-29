@@ -120,4 +120,4 @@ get_fund_data <- function(
   # return the fund data -----------------------------------------------------
 
   return(fund_data)
-i
+}
