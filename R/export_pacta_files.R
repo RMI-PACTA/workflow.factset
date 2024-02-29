@@ -5,6 +5,9 @@
 #' @param conn DBI connection object.
 #' @param destination path to directory where exported files will be saved
 #' @param data_timestamp filter data as-of this timestamp
+#' @param data_timestamp_lookback A single string specifying the oldest data
+#' that should be included in the funds output. Default (NULL) uses a lookback
+#' of 3 months.
 #' @param iss_reporting_year Reporting year for ISS emissions data
 #' @param create_tar Flag to create .tar.gz file of exported files
 #' @param wait_for_update Wait for `wait_file` to exist before exporting.
@@ -23,6 +26,7 @@ export_pacta_files <- function(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  data_timestamp_lookback = NULL,
   iss_reporting_year = Sys.getenv("ISS_REPORTING_YEAR", ""),
   create_tar = TRUE,
   wait_for_update = as.logical(Sys.getenv("UPDATE_DB", FALSE)),
@@ -68,6 +72,21 @@ export_pacta_files <- function(
   if (inherits(data_timestamp, "character")) {
     data_timestamp <- lubridate::ymd_hms(
       data_timestamp,
+      quiet = TRUE,
+      tz = "UTC",
+      truncated = 3L
+    )
+  }
+
+  if (is.null(data_timestamp_lookback)) {
+    logger::log_warn(
+      "The data_timestamp_lookback argument is NULL. ",
+      "Using a lookback of 3 months."
+    )
+    data_timestamp_lookback <- data_timestamp - lubridate::dmonths(3L)
+  } else {
+    data_timestamp_lookback <- lubridate::ymd_hms(
+      data_timestamp_lookback,
       quiet = TRUE,
       tz = "UTC",
       truncated = 3L
@@ -164,7 +183,8 @@ export_pacta_files <- function(
   logger::log_info("Fetching fund data.")
   fund_data <- get_fund_data(
     conn = conn,
-    data_timestamp = data_timestamp
+    data_timestamp = data_timestamp,
+    data_timestamp_lookback = data_timestamp_lookback
   )
   logger::log_info("Exporting fund data to ", fund_data_path)
   saveRDS(object = fund_data, file = fund_data_path)

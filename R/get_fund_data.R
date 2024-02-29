@@ -2,8 +2,10 @@
 #' `factset_fund_data` tibble
 #'
 #' @param conn databse connection
-#' @param data_timestamp A single string specifying the desired date for the
-#'   data in the form "2021-12-31"
+#' @param data_timestamp A date object specifying the desired date for the most
+#' recent data to be included in the output.
+#' @param data_timestamp_lookback A date object specifying the oldest data
+#' that should be included in the output
 #'
 #' @return A tibble properly prepared to be saved as the `factset_fund_data.rds`
 #'   output file
@@ -12,12 +14,14 @@
 
 get_fund_data <- function(
   conn,
-  data_timestamp
+  data_timestamp,
+  data_timestamp_lookback
 ) {
   # get the fund holdings and the holdings' reported market value ------------
 
   logger::log_debug("Extracting financial info from database.")
   logger::log_info("using data timestamp: ", data_timestamp)
+  logger::log_debug("Looking back in data to: ", data_timestamp_lookback)
 
   logger::log_trace(
     "Accessing historical fund holdings - security level. ",
@@ -25,6 +29,9 @@ get_fund_data <- function(
   )
   fund_security <- dplyr::tbl(conn, "own_v5_own_fund_detail") %>%
     dplyr::filter(.data[["report_date"]] <= .env[["data_timestamp"]]) %>%
+    dplyr::filter(
+      .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
+    ) %>%
     dplyr::group_by(.data$factset_fund_id) %>%
     dplyr::filter(.data$report_date == max(.data$report_date, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
@@ -41,6 +48,9 @@ get_fund_data <- function(
   )
   fund_nonsecurity <- dplyr::tbl(conn, "own_v5_own_fund_generic") %>%
     dplyr::filter(.data[["report_date"]] <= .env[["data_timestamp"]]) %>%
+    dplyr::filter(
+      .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
+    ) %>%
     dplyr::group_by(.data$factset_fund_id) %>%
     dplyr::filter(.data$report_date == max(.data$report_date, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
@@ -66,6 +76,9 @@ get_fund_data <- function(
   )
   fund_mv <- dplyr::tbl(conn, "own_v5_own_ent_fund_filing_hist") %>%
     dplyr::filter(.data[["report_date"]] <= .env[["data_timestamp"]]) %>%
+    dplyr::filter(
+      .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
+    ) %>%
     dplyr::group_by(.data$factset_fund_id) %>%
     dplyr::filter(.data$report_date == max(.data$report_date, na.rm = TRUE)) %>%
     dplyr::ungroup() %>%
