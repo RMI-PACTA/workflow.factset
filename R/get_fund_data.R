@@ -97,7 +97,8 @@ get_fund_data <- function(
       factset_fund_id = "factset_fund_id",
       fund_reported_mv = "total_reported_mv",
       holding_isin = "isin",
-      holding_reported_mv = "holding_reported_mv"
+      holding_reported_mv = "holding_reported_mv",
+      report_date = "report_date"
     )
 
   logger::log_trace("Downloading fund data.")

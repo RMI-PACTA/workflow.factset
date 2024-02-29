@@ -260,6 +260,7 @@ The files exported by `workflow.factset::export_pacta_files()` are:
 |fund_reported_mv|dbl|100000000|Total reported Market Value|
 |holding_isin|chr|"XX0000000002"|ISIN held in fund|
 |holding_reported_mv|dbl|100000|Market value of ISIN held in fund|
+|report_date|date|2023-12-31|report date for holding|
 
 ### factset_isin_to_fund_table.rds
 
