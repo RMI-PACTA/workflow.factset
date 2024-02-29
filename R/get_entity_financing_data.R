@@ -67,6 +67,7 @@ get_entity_financing_data <- function(
 
   # merge and collect the data, then disconnect --------------------------------
 
+  data_timestamp_year <- lubridate::year(data_timestamp)
   logger::log_trace("Merging entity financing data.")
   entity_financing_data <- ff_mkt_val %>%
     dplyr::full_join(
@@ -79,10 +80,17 @@ get_entity_financing_data <- function(
     dplyr::filter(.data$date <= .env$data_timestamp) %>%
     dplyr::filter(.data$date >= .env$data_timestamp_lookback) %>%
     dplyr::filter(
-      lubridate::year(.data$date) == lubridate::year(data_timestamp)
+      !(
+        is.na(.data[["ff_mkt_val"]]) &
+          is.na(.data[["ff_debt"]])
+      )
     ) %>%
-    dplyr::group_by(.data$fsym_id, .data$currency) %>%
-    dplyr::filter(.data$date == max(.data$date)) %>%
+    dplyr::group_by(.data[["fsym_id"]], .data[["currency"]]) %>%
+    dplyr::filter(.data[["date"]] <= .env[["data_timestamp"]]) %>%
+    dplyr::filter(
+      lubridate::year(.data[["date"]]) == data_timestamp_year
+    ) %>%
+    dplyr::filter(.data[["date"]] == max(.data[["date"]])) %>%
     dplyr::ungroup()
 
   logger::log_trace("Downloading entity financing data.")
@@ -90,12 +98,12 @@ get_entity_financing_data <- function(
     dplyr::collect() %>%
     dplyr::mutate(
       # convert units from millions to units
-      ff_mkt_val = .data$ff_mkt_val * 1e6,
-      ff_debt = .data$ff_debt * 1e6
+      ff_mkt_val = .data[["ff_mkt_val"]] * 1e6L,
+      ff_debt = .data[["ff_debt"]] * 1e6L
     ) %>%
     dplyr::distinct()
 
   # return the entity financing data -------------------------------------------
 
-  entity_financing_data
+  return(entity_financing_data)
 }

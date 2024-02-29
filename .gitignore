@@ -1,2 +1,3 @@
 .env
 azure-deploy.parameters.json
+factset-extracted/

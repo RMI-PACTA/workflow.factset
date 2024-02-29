@@ -17,7 +17,7 @@ connect_factset_db <- function(
   dbname = Sys.getenv("PGDATABASE"),
   host = Sys.getenv("PGHOST"),
   port = Sys.getenv("PGPORT", 5432L),
-  options = "-c search_path=fds",
+  db_options = "-c search_path=fds",
   username = Sys.getenv("PGUSER"),
   password = Sys.getenv("PGPASSWORD")
 ) {
@@ -37,18 +37,25 @@ connect_factset_db <- function(
   }
 
   logger::log_trace(
-    "Connecting to database {dbname} on {host}:{port} as {username}"
+    "Connecting to database ",
+    dbname,
+    " on ",
+    host,
+    ":",
+    port,
+    " as ",
+    username,
+    ""
   )
-  conn <-
-    DBI::dbConnect(
-      drv = RPostgres::Postgres(),
-      dbname = dbname,
-      host = host,
-      port = port,
-      user = username,
-      password = password,
-      options = options
-    )
+  conn <- DBI::dbConnect(
+    drv = RPostgres::Postgres(),
+    dbname = dbname,
+    host = host,
+    port = port,
+    user = username,
+    password = password,
+    options = db_options
+  )
 
   reg_conn_finalizer(conn, DBI::dbDisconnect, parent.frame())
 }
@@ -65,13 +72,13 @@ reg_conn_finalizer <- function(
 
   if (isTRUE(is_parent_global)) {
     env_finalizer <- new.env(parent = emptyenv())
-    env_finalizer$conn <- conn
+    env_finalizer[["conn"]] <- conn
     attr(conn, "env_finalizer") <- env_finalizer
 
     reg.finalizer(env_finalizer, function(e) {
-      if (DBI::dbIsValid(e$conn)) {
-        warn_db_autoclose(e$conn)
-        try(close_fun(e$conn))
+      if (DBI::dbIsValid(e[["conn"]])) {
+        warn_db_autoclose(e[["conn"]])
+        try(close_fun(e[["conn"]]))
       }
     },
     onexit = TRUE
@@ -94,13 +101,11 @@ reg_conn_finalizer <- function(
 }
 
 warn_db_autoclose <- function(conn) {
-  dbname <- DBI::dbGetInfo(conn)$dbname
-  host <- DBI::dbGetInfo(conn)$host
   logger::log_warn(
     "The database connection to ",
-    dbname,
+    DBI::dbGetInfo(conn)[["dbname"]],
     " on ",
-    host,
+    DBI::dbGetInfo(conn)[["host"]],
     " was closed automatically ",
     "because the calling environment was closed."
   )
