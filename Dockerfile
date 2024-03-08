@@ -45,7 +45,7 @@ RUN apt-get update \
 ARG CRAN_REPO="https://packagemanager.posit.co/cran/__linux__/jammy/2023-10-30"
 RUN echo "options(repos = c(CRAN = '$CRAN_REPO'), pkg.sysreqs = FALSE)" >> "${R_HOME}/etc/Rprofile.site" \
       # install packages for dependency resolution and installation
-      && Rscript -e "install.packages(c('pak', 'jsonlite'))"
+      && Rscript -e "install.packages(c('pak', 'jsonlite', 'pkgdepends'))"
 
 # Install R deopendencies
 COPY DESCRIPTION /workflow.factset/DESCRIPTION
