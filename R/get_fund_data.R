@@ -33,7 +33,9 @@ get_fund_data <- function(
       .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
     ) %>%
     dplyr::group_by(.data[["factset_fund_id"]]) %>%
-    dplyr::filter(.data[["report_date"]] == max(.data[["report_date"]], na.rm = TRUE)) %>%
+    dplyr::filter(
+      .data[["report_date"]] == max(.data[["report_date"]], na.rm = TRUE)
+    ) %>%
     dplyr::ungroup() %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
@@ -52,7 +54,9 @@ get_fund_data <- function(
       .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
     ) %>%
     dplyr::group_by(.data[["factset_fund_id"]]) %>%
-    dplyr::filter(.data[["report_date"]] == max(.data[["report_date"]], na.rm = TRUE)) %>%
+    dplyr::filter(
+      .data[["report_date"]] == max(.data[["report_date"]], na.rm = TRUE)
+    ) %>%
     dplyr::ungroup() %>%
     dplyr::select(
       factset_fund_id = "factset_fund_id",
@@ -80,7 +84,9 @@ get_fund_data <- function(
       .data[["report_date"]] >= .env[["data_timestamp_lookback"]]
     ) %>%
     dplyr::group_by(.data[["factset_fund_id"]]) %>%
-    dplyr::filter(.data[["report_date"]] == max(.data[["report_date"]], na.rm = TRUE)) %>%
+    dplyr::filter(
+      .data[["report_date"]] == max(.data[["report_date"]], na.rm = TRUE)
+    ) %>%
     dplyr::ungroup() %>%
     dplyr::select(
       "factset_fund_id",
