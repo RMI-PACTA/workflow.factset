@@ -1,0 +1,7 @@
+on:
+  pull_request:
+
+jobs:
+  docker:
+    name: Docker actions
+    uses: RMI-PACTA/actions/.github/workflows/docker.yml@main
