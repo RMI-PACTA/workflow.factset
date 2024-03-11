@@ -36,16 +36,17 @@ WORKDIR /home/runner-workflow-factset
 # install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+      libcurl4-openssl-dev=7.* \
       libicu-dev=70.* \
       libpq-dev=14.* \
     && chmod -R a+rwX /root \
     && rm -rf /var/lib/apt/lists/*
 
 # set frozen CRAN repo
-ARG CRAN_REPO="https://packagemanager.posit.co/cran/__linux__/jammy/2023-10-30"
+ARG CRAN_REPO="https://packagemanager.posit.co/cran/2024-03-01"
 RUN echo "options(repos = c(CRAN = '$CRAN_REPO'), pkg.sysreqs = FALSE)" >> "${R_HOME}/etc/Rprofile.site" \
       # install packages for dependency resolution and installation
-      && Rscript -e "install.packages(c('pak', 'jsonlite'))"
+      && Rscript -e "install.packages(c('pak'))"
 
 # Install R deopendencies
 COPY DESCRIPTION /workflow.factset/DESCRIPTION
