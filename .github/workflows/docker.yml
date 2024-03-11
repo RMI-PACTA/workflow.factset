@@ -10,4 +10,4 @@ name: Docker
 jobs:
   docker:
     name: Docker actions
-    uses: RMI-PACTA/actions/.github/workflows/docker.yml@76e20bc8e292a9954aa919351630f68b89cd20d3
+    uses: RMI-PACTA/actions/.github/workflows/docker.yml@db5322e787ce698dcb77bd922eda2b4bac45f3e8
