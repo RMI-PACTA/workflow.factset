@@ -20,7 +20,7 @@ get_manual_sector_override <- function(
 
   # factset_entity_id -----------------------------------------------
   logger::log_trace("Accessing entity information.")
-  sym_entity <- dplyr::tbl(conn, "sym_v1_sym_entity")
+  sym_entity <- dbplyr::tbl(conn, "sym_v1_sym_entity")
 
   logger::log_trace("Preparing company names.")
   company_names <- override_mapping[["entity_proper_name"]]

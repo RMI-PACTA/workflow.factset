@@ -36,7 +36,7 @@ get_entity_ids <- function(
       " to results."
     )
     this_result <- dplyr::select(
-      .data = dplyr::tbl(conn, table_name),
+      .data = dbplyr::tbl(conn, table_name),
       dplyr::all_of(colname)
     )
     if (exists("results")) {

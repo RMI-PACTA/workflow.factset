@@ -11,7 +11,7 @@ get_industry_map_bridge <- function(conn) {
   logger::log_debug("Extracting Industry Map bridge.")
 
   logger::log_trace("Accessing industry map.")
-  factset_industry_map <- dplyr::tbl(conn, "ref_v2_factset_industry_map")
+  factset_industry_map <- dbplyr::tbl(conn, "ref_v2_factset_industry_map")
 
   logger::log_trace("Downloading industry map from database.")
   factset_industry_map <- dplyr::collect(factset_industry_map)
