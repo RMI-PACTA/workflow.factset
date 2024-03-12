@@ -12,14 +12,14 @@ get_isin_to_fund_table <- function(conn) {
   # get the ISIN to fsym_id table --------------------------------------------
 
   logger::log_debug("Getting ISIN to fsym_id mapping")
-  isin <- dbplyr::tbl(conn, "sym_v1_sym_isin") %>%
+  isin <- dplyr::tbl(conn, "sym_v1_sym_isin") %>%
     dplyr::select("isin", "fsym_id")
 
 
   # get the fsym_id to fund_id table -----------------------------------------
 
   logger::log_debug("Getting fsym_id to fund id mapping")
-  fund_id <- dbplyr::tbl(conn, "own_v5_own_ent_fund_identifiers") %>%
+  fund_id <- dplyr::tbl(conn, "own_v5_own_ent_fund_identifiers") %>%
     dplyr::filter(.data[["identifier_type"]] == "FSYM_ID") %>%
     dplyr::select(fsym_id = "fund_identifier", "factset_fund_id")
 

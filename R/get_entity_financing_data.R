@@ -20,10 +20,10 @@ get_entity_financing_data <- function(
   logger::log_debug("using data timestamp: ", data_timestamp)
 
   logger::log_trace("Accessing security map - FactSet Fundamentals.")
-  ff_fsym_company_id <- dbplyr::tbl(conn, "ff_v3_ff_sec_map")
+  ff_fsym_company_id <- dplyr::tbl(conn, "ff_v3_ff_sec_map")
 
   logger::log_trace("Accessing security map - FactSet Ownership.")
-  own_fsym_company_id <- dbplyr::tbl(conn, "own_v5_own_sec_map")
+  own_fsym_company_id <- dplyr::tbl(conn, "own_v5_own_sec_map")
 
   logger::log_trace("UNIONing security maps.")
   fsym_company_id <- dplyr::union_all(
@@ -35,10 +35,10 @@ get_entity_financing_data <- function(
   # get fsym_id to factset_entity_id -------------------------------------------
 
   logger::log_trace("Accessing security to entity map - FactSet Fundamentals.")
-  ff_sec_entity <- dbplyr::tbl(conn, "ff_v3_ff_sec_entity")
+  ff_sec_entity <- dplyr::tbl(conn, "ff_v3_ff_sec_entity")
 
   logger::log_trace("Accessing security to entity map - FactSet Ownership.")
-  own_sec_entity <- dbplyr::tbl(conn, "own_v5_own_sec_entity")
+  own_sec_entity <- dplyr::tbl(conn, "own_v5_own_sec_entity")
 
   logger::log_trace("UNIONing security to entity maps.")
   sec_entity <- dplyr::union_all(
@@ -50,14 +50,14 @@ get_entity_financing_data <- function(
   # get market value data ------------------------------------------------------
 
   logger::log_trace("Accessing market value data.")
-  ff_mkt_val <- dbplyr::tbl(conn, "ff_v3_ff_basic_der_af") %>%
+  ff_mkt_val <- dplyr::tbl(conn, "ff_v3_ff_basic_der_af") %>%
     dplyr::select("fsym_id", "date", "currency", "ff_mkt_val")
 
 
   # get debt outstanding data --------------------------------------------------
 
   logger::log_trace("Accessing balance sheet data.")
-  ff_debt <- dbplyr::tbl(conn, "ff_v3_ff_basic_af") %>%
+  ff_debt <- dplyr::tbl(conn, "ff_v3_ff_basic_af") %>%
     dplyr::select("fsym_id", "date", "currency", "ff_debt")
 
 

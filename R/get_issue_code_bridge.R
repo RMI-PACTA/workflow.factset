@@ -16,10 +16,10 @@ get_issue_code_bridge <- function(conn) {
   # factset_entity_id -----------------------------------------------
 
   logger::log_trace("Accessing issue type map.")
-  issue_type_map <- dbplyr::tbl(conn, "ref_v2_issue_type_map")
+  issue_type_map <- dplyr::tbl(conn, "ref_v2_issue_type_map")
 
   logger::log_trace("Accessing asset class map.")
-  asset_class_map <- dbplyr::tbl(conn, "ref_v2_asset_class_map")
+  asset_class_map <- dplyr::tbl(conn, "ref_v2_asset_class_map")
 
   # merge and collect --------------------------------------------------------
 
