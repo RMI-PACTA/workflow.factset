@@ -1,7 +1,12 @@
+*.env
 .dockerignore
 .git/
 .github/
 .gitkeep
 .lintr
+Dockerfile
 ^LICENSE\.md$
 ^\.github$
+azure-deploy.*
+docker-compose.yml
+factset-extracted/
