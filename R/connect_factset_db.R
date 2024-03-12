@@ -3,7 +3,7 @@
 #' @param dbname name of the database to connect to
 #' @param host hostname of the server to connect to
 #' @param port port number of the server to connect to
-#' @param options additional options to pass to the database connection.
+#' @param db_options additional options to pass to the database connection.
 #' Typically used to define schema search path.
 #' @param username username to use for the database connection
 #' @param password password to use for the database connection

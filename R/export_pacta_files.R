@@ -1,7 +1,5 @@
 #' Export files for use in PACTA data preparation
 #'
-#' @param Destination directory for the output files
-#'
 #' @param conn DBI connection object.
 #' @param destination path to directory where exported files will be saved
 #' @param data_timestamp filter data as-of this timestamp
