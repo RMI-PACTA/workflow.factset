@@ -1,4 +1,7 @@
-^LICENSE\.md$
+.dockerignore
 .git/
 .github/
+.gitkeep
+.lintr
+^LICENSE\.md$
 ^\.github$
