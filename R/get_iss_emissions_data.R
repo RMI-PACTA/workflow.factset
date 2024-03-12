@@ -2,7 +2,8 @@
 #' `factset_iss_emissions` tibble
 #'
 #' @param conn databse connection
-#' @param reporting_year A single numeric specifying the year of data to be returned
+#' @param reporting_year A single numeric specifying the year of data to be
+#' returned
 #' @param min_estimated_trust A single numeric specifying the minimum allowed
 #'   "estimated trust" value
 #' @param min_reported_trust A single numeric specifying the minimum allowed
