@@ -25,7 +25,7 @@ Authors@R:
              role = c("cph", "fnd"),
              email = "PACTA4investors@rmi.org"))
 Description: Extract data from a FactSet Postgres database for use as part of
-  PACTA Data Preparation
+  PACTA Data Preparation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
