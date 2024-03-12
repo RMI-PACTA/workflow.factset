@@ -228,7 +228,7 @@ export_pacta_files <- function(
     "Exporting Industry Map bridge to ", sector_override_path
   )
   saveRDS(object = manual_sector_override, file = sector_override_path)
-  write.csv(
+  utils::write.csv(
     x = manual_sector_override,
     file = sector_override_csv_path,
     na = "",
@@ -258,7 +258,7 @@ export_pacta_files <- function(
     "Exporting Industry Map bridge to ", industry_map_bridge_path
   )
   saveRDS(object = industry_map_bridge, file = industry_map_bridge_path)
-  write.csv(
+  utils::write.csv(
     x = industry_map_bridge,
     file = industry_map_bridge_csv_path,
     na = "",
@@ -277,7 +277,7 @@ export_pacta_files <- function(
   logger::log_info(
     "Exporting FactSet Entity IDs to ", entity_ids_path
   )
-  write.csv(
+  utils::write.csv(
     x = entity_ids,
     file = entity_ids_path,
     na = "",
