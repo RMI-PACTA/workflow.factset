@@ -15,16 +15,13 @@ get_iss_emissions_data(
 \arguments{
 \item{conn}{databse connection}
 
+\item{reporting_year}{A single numeric specifying the year of data to be returned}
+
 \item{min_estimated_trust}{A single numeric specifying the minimum allowed
 "estimated trust" value}
 
 \item{min_reported_trust}{A single numeric specifying the minimum allowed
 "reported trust" value}
-
-\item{year}{A single numeric specifying the year of data to be returned}
-
-\item{...}{Arguments to be passed to the \code{connect_conn()} function (for
-specifying database connection parameters)}
 }
 \value{
 A tibble properly prepared to be saved as the

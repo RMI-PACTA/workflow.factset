@@ -2,6 +2,7 @@
 #' `factset_entity_info` tibble
 #'
 #' @param conn database connection
+#' @param colname column name to pull values from across all tables in database.
 #'
 #' @return A tibble properly prepared to be saved as the
 #'   `factset_entity_ids.csv` output file

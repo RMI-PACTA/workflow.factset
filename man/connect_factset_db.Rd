@@ -20,12 +20,12 @@ connect_factset_db(
 
 \item{port}{port number of the server to connect to}
 
+\item{db_options}{additional options to pass to the database connection.
+Typically used to define schema search path.}
+
 \item{username}{username to use for the database connection}
 
 \item{password}{password to use for the database connection}
-
-\item{options}{additional options to pass to the database connection.
-Typically used to define schema search path.}
 }
 \value{
 a database connection object

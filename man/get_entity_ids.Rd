@@ -9,6 +9,8 @@ get_entity_ids(conn, colname = "factset_entity_id")
 }
 \arguments{
 \item{conn}{database connection}
+
+\item{colname}{column name to pull values from across all tables in database.}
 }
 \value{
 A tibble properly prepared to be saved as the

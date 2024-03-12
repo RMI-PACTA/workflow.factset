@@ -6,7 +6,7 @@
 \alias{workflow.factset-package}
 \title{workflow.factset: Extract Financial Data for use in PACTA}
 \description{
-Extract data from a FactSet Postgres database for use as part of PACTA Data Preparation
+Extract data from a FactSet Postgres database for use as part of PACTA Data Preparation.
 }
 \author{
 \strong{Maintainer}: CJ Yetman \email{cj@cjyetman.com} (\href{https://orcid.org/0000-0001-5099-9500}{ORCID}) [contractor]

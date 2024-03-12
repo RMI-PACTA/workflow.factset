@@ -5,13 +5,16 @@
 \title{Get the fund data from the FactSet database and prepare the
 \code{factset_fund_data} tibble}
 \usage{
-get_fund_data(conn, data_timestamp)
+get_fund_data(conn, data_timestamp, data_timestamp_lookback)
 }
 \arguments{
 \item{conn}{databse connection}
 
-\item{data_timestamp}{A single string specifying the desired date for the
-data in the form "2021-12-31"}
+\item{data_timestamp}{A date object specifying the desired date for the most
+recent data to be included in the output.}
+
+\item{data_timestamp_lookback}{A date object specifying the oldest data
+that should be included in the output}
 }
 \value{
 A tibble properly prepared to be saved as the \code{factset_fund_data.rds}

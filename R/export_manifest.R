@@ -39,15 +39,15 @@ export_manifest <- function(
     ),
     session = list(
       info = list(
-        R.version = sessionInfo()[["R.version"]],
-        platform = sessionInfo()[["platform"]],
-        running = sessionInfo()[["running"]],
-        locale = sessionInfo()[["locale"]],
+        R.version = utils::sessionInfo()[["R.version"]],
+        platform = utils::sessionInfo()[["platform"]],
+        running = utils::sessionInfo()[["running"]],
+        locale = utils::sessionInfo()[["locale"]],
         loaded_namespaces = as.list(
           vapply(
             X = loadedNamespaces(),
             FUN = function(x) {
-              as.character(packageVersion(x))
+              as.character(utils::packageVersion(x))
             },
             FUN.VALUE = character(1L),
             USE.NAMES = TRUE
@@ -100,7 +100,7 @@ get_info_for_files <- function(file_paths) {
     if (tolower(tools::file_ext(f)) == "rds") {
       contents <- readRDS(f)
     } else if (tolower(tools::file_ext(f)) == "csv") {
-      contents <- read.csv(f)
+      contents <- utils::read.csv(f)
     } else {
       logger::log_warn("File not supported for summary information: ", f)
       contents <- NULL
