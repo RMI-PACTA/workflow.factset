@@ -8,6 +8,7 @@ export_pacta_files(
   conn = connect_factset_db(),
   destination = file.path(Sys.getenv("EXPORT_DESTINATION")),
   data_timestamp = Sys.getenv("DATA_TIMESTAMP", Sys.time()),
+  data_timestamp_lookback = NULL,
   iss_reporting_year = Sys.getenv("ISS_REPORTING_YEAR", ""),
   create_tar = TRUE,
   wait_for_update = as.logical(Sys.getenv("UPDATE_DB", FALSE)),
@@ -23,6 +24,10 @@ export_pacta_files(
 
 \item{data_timestamp}{filter data as-of this timestamp}
 
+\item{data_timestamp_lookback}{A single string specifying the oldest data
+that should be included in the funds output. Default (NULL) uses a lookback
+of 3 months.}
+
 \item{iss_reporting_year}{Reporting year for ISS emissions data}
 
 \item{create_tar}{Flag to create .tar.gz file of exported files}
@@ -36,8 +41,6 @@ complete.}
 \item{terminate_connection}{Flag to terminate connection, rather than let
 finalizer close db connection. Allows for early termination of connection
 before exporting tar file or metadata.}
-
-\item{Destination}{directory for the output files}
 }
 \value{
 vector of paths to exported files
