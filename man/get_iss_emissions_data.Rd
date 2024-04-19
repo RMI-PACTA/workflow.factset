@@ -15,7 +15,8 @@ get_iss_emissions_data(
 \arguments{
 \item{conn}{databse connection}
 
-\item{reporting_year}{A single numeric specifying the year of data to be returned}
+\item{reporting_year}{A single numeric specifying the year of data to be
+returned}
 
 \item{min_estimated_trust}{A single numeric specifying the minimum allowed
 "estimated trust" value}
