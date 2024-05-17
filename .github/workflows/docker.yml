@@ -11,3 +11,4 @@ jobs:
   docker:
     name: Docker actions
     uses: RMI-PACTA/actions/.github/workflows/docker.yml@fix/74-limit-history-output
+
