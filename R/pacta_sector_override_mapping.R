@@ -87,7 +87,7 @@ pacta_sector_override_mapping <- tibble::tribble(
   "Reliance Industries Ltd.", "Oil&Gas", NA,
   "LATAM Finance Ltd.", "Aviation", NA,
   "UGI Utilities, Inc.", "Power", NA,
-  "Tosco Corp.", "Oil&Gas", NA,
+  "Tosco Corp.", "Oil&Gas", "85a3b95ee1db76fc37bcf8ed7430de22",
   "British Airways Pass Through Trust Series 2013-1", "Aviation", NA,
   "PACCAR Financial Corp.", "Other", NA,
   "BG Energy Capital Plc", "Oil&Gas", NA,
