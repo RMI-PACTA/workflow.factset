@@ -380,7 +380,6 @@ pacta_sector_override_mapping <- tibble::tribble(
   "AES Panama Generation Holdings SRL", "Power", NA,
   "Globalsol Villanueva 1 SA", "Power", NA,
   "Santos Finance Ltd.", "Oil&Gas", NA,
-  "Aviation", NA,
   "ConocoPhillips Canada Funding Co. II", "Oil&Gas", NA,
   "Washington Natural Gas Co.", "Power", NA,
   "United Airlines Pass Through Trust Series 2016-1", "Aviation", NA,
