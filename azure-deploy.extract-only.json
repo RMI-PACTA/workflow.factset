@@ -57,11 +57,10 @@
       }
     },
 
-    "PGHOSTOverride": {
+    "PGHOST": {
       "type": "string",
-      "defaultValue": "",
       "metadata": {
-        "description": "Explicitly define a (full URL) hostname for PGHOST. If empty, the hostname will be derived from the container group name."
+        "description": "Explicitly define a (full URL) hostname for PGHOST."
       }
     },
     "PGPASSWORD": {
@@ -71,52 +70,11 @@
       }
     },
 
-    "imageTagLoader": {
-      "type": "string",
-      "defaultValue": "main",
-      "metadata": {
-        "description": "Image tag for the loader container."
-      }
-    },
     "imageTagWorkflow": {
       "type": "string",
       "defaultValue": "main",
       "metadata": {
         "description": "Image tag for the workflow container."
-      }
-    },
-
-    "loaderDBBackup": {
-      "type": "string",
-      "defaultValue": "1",
-      "metadata": {
-        "description": "Backup the database to a file."
-      }
-    },
-    "loaderDBRestore": {
-      "type": "string",
-      "defaultValue": "1",
-      "metadata": {
-        "description": "Restore the database from a backup."
-      }
-    },
-    "loaderFactsetSerial": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Serial Number provided by FactSet"
-      }
-    },
-    "loaderFactsetUsername": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Username provided by FactSet"
-      }
-    },
-    "updateDB": {
-      "type": "bool",
-      "defaultValue": true,
-      "metadata": {
-        "description": "Deploy Database and FDSLoader image to update the database."
       }
     },
 
@@ -150,230 +108,20 @@
       "metadata": {
         "description": "The file share name for the extracted files."
       }
-    },
-
-    "storageAccountKeyLoader": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The storage account key for the storage account for factset_data_loader."
-      }
-    },
-    "storageAccountNameLoader": {
-      "type": "string",
-      "metadata": {
-        "description": "The storage account name for the storage account for factset_data_loader."
-      }
-    },
-    "storageAccountShareLoader": {
-      "type": "string",
-      "metadata": {
-        "description": "The file share name for the factset_data_loader."
-      }
     }
-    
+
   },
 
   "variables": {
 
-    "FDSLoaderZipFilename": "FDSLoader-Linux-2.13.6.0.zip",
     "PGDATABASE": "FDS",
-    "PGHOST": "[if(empty(parameters('PGHOSTOverride')), concat(variables('dbServerName'), '.postgres.database.azure.com'), parameters('PGHOSTOverride'))]",
     "PGUSER": "postgres",
     "containerregistry": "ghcr.io/rmi-pacta",
-    "dbAvailabilityZone": "1",
-    "dbHAMode":"Disabled",
-    "dbInstanceType": "Standard_D2ds_v4",
-    "dbServerEdition": "GeneralPurpose",
-    "dbServerName": "[concat(parameters('containerGroupName'), '-postgres')]",
-    "dbSkuSizeGB": 512,
-    "machineCpuCoresLimitLoader": 3,
     "machineCpuCoresLimitWorkflow": 2,
-    "machineCpuCoresRequestLoader": 2,
-    "machineCpuCoresRequestWorkflow": 1,
-    "machineMemoryInGBLimitLoader": 6,
-    "machineMemoryInGBLimitWorkflow": 16,
-    "machineMemoryInGBRequestLoader": 4,
+    "machineCpuCoresRequestWorkflow": 2,
+    "machineMemoryInGBLimitWorkflow": 12,
     "machineMemoryInGBRequestWorkflow": 12,
-    "mountPathExport": "/mnt/factset-extracted",
-    "mountPathFDSLoader": "/mnt/factset-loader",
-    "mountPathWorkingSpace": "/mnt/workingspace",
-    "postgresVersion": "14",
-
-    "emptyArray": [],
-    "ContainerDefinitionWorkflow":[
-      {
-        "name": "workflow-factset",
-        "properties": {
-          "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
-          "ports": [],
-          "resources": {
-            "limits": {
-              "cpu": "[variables('machineCpuCoresLimitWorkflow')]",
-              "memoryInGB": "[variables('machineMemoryInGBLimitWorkflow')]"
-            },
-            "requests": {
-              "cpu": "[variables('machineCpuCoresRequestWorkflow')]",
-              "memoryInGB": "[variables('machineMemoryInGBRequestWorkflow')]"
-            }
-          },
-          "environmentVariables": [
-            {
-              "name": "PGUSER",
-              "value": "[variables('PGUSER')]"
-            },
-            {
-              "name": "PGPASSWORD",
-              "secureValue": "[parameters('PGPASSWORD')]"
-            },
-            {
-              "name": "PGHOST",
-              "value": "[variables('PGHOST')]"
-            },
-            {
-              "name": "PGDATABASE",
-              "value": "[variables('PGDATABASE')]"
-            },
-            {
-              "name": "DEPLOY_START_TIME",
-              "value": "[parameters('starttime')]"
-            },
-            {
-              "name": "MACHINE_CORES",
-              "value": "[variables('machineCpuCoresRequestWorkflow')]"
-            },
-            {
-              "name": "LOG_LEVEL",
-              "value": "TRACE"
-            },
-            {
-              "name": "EXPORT_DESTINATION",
-              "value": "[variables('mountPathExport')]"
-            },
-            {
-              "name": "DATA_TIMESTAMP",
-              "value": "[parameters('dataTimestamp')]"
-            },
-            {
-              "name": "ISS_REPORTING_YEAR",
-              "value": "[parameters('issReportingYear')]"
-            },
-            {
-              "name": "UPDATE_DB",
-              "value": "[parameters('updateDB')]"
-            },
-            {
-              "name": "WORKINGSPACEPATH",
-              "value": "[variables('mountPathWorkingSpace')]"
-            }
-          ],
-          "volumeMounts": [
-            {
-              "name": "factset-extracted",
-              "mountPath": "[variables('mountPathExport')]"
-            },
-            {
-              "name": "workingspace",
-              "mountPath": "[variables('mountPathWorkingSpace')]"
-            }
-          ]
-        }
-      }
-    ],
-    "ContainerDefinitionLoader": [
-      {
-        "name": "loader-runner",
-        "properties": {
-          "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
-          "ports": [],
-          "resources": {
-            "limits": {
-              "cpu": "[variables('machineCpuCoresLimitLoader')]",
-              "memoryInGB": "[variables('machineMemoryInGBLimitLoader')]"
-            },
-            "requests": {
-              "cpu": "[variables('machineCpuCoresRequestLoader')]",
-              "memoryInGB": "[variables('machineMemoryInGBRequestLoader')]"
-            }
-          },
-          "environmentVariables": [
-            {
-              "name": "RESTORE_DB",
-              "value": "[parameters('loaderDBRestore')]"
-            },
-            {
-              "name": "BACKUP_DB",
-              "value": "[parameters('loaderDBBackup')]"
-            },
-            {
-              "name": "PGUSER",
-              "value": "[variables('PGUSER')]"
-            },
-            {
-              "name": "PGPASSWORD",
-              "secureValue": "[parameters('PGPASSWORD')]"
-            },
-            {
-              "name": "PGHOST",
-              "value": "[variables('PGHOST')]"
-            },
-            {
-              "name": "PGDATABASE",
-              "value": "[variables('PGDATABASE')]"
-            },
-            {
-              "name": "FACTSET_USER",
-              "value": "[parameters('loaderFactsetUsername')]"
-            },
-            {
-              "name": "FACTSET_SERIAL",
-              "secureValue": "[parameters('loaderFactsetSerial')]"
-            },
-            {
-              "name": "KEY_FILENAME",
-              "value": "key.txt"
-            },
-            {
-              "name": "DEPLOY_START_TIME",
-              "value": "[parameters('starttime')]"
-            },
-            {
-              "name": "MACHINE_CORES",
-              "value": "[variables('machineCpuCoresRequestLoader')]"
-            },
-            {
-              "name": "WORKINGSPACEPATH",
-              "value": "[variables('mountPathWorkingSpace')]"
-            },
-            {
-              "name": "LOG_LEVEL",
-              "value": "DEBUG"
-            },
-            {
-              "name": "FDS_LOADER_PATH",
-              "value": "/home/fdsrunner"
-            },
-            {
-              "name": "FDS_LOADER_ZIP_FILENAME",
-              "value": "[variables('FDSLoaderZipFilename')]"
-            },
-            {
-              "name": "FDS_LOADER_SOURCE_PATH",
-              "value": "[variables('mountPathFDSLoader')]"
-            }
-          ],
-          "volumeMounts": [
-            {
-              "name": "factset-loader",
-              "mountPath": "[variables('mountPathFDSLoader')]"
-            },
-            {
-              "name": "workingspace",
-              "mountPath": "[variables('mountPathWorkingSpace')]"
-            }
-          ]
-        }
-      }
-    ]
+    "mountPathExport": "/mnt/factset-extracted"
 
   },
 
@@ -392,9 +140,6 @@
           "[parameters('identity')]": {}
         }
       },
-      "dependsOn": [
-        "[if(parameters('updateDB'), resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName')), '')]"
-      ],
       "properties": {
         "diagnostics": {
           "logAnalytics": {
@@ -403,15 +148,80 @@
             "workspaceKey": "[parameters('logWorkspaceKey')]"
           }
         },
-        "containers":
-        "[concat(variables('ContainerDefinitionWorkflow'), if(parameters('updateDB'), variables('ContainerDefinitionLoader'), variables('emptyArray')))]",
+        "containers": [
+          {
+            "name": "workflow-factset",
+            "properties": {
+              "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
+              "ports": [],
+              "resources": {
+                "limits": {
+                  "cpu": "[variables('machineCpuCoresLimitWorkflow')]",
+                  "memoryInGB": "[variables('machineMemoryInGBLimitWorkflow')]"
+                },
+                "requests": {
+                  "cpu": "[variables('machineCpuCoresRequestWorkflow')]",
+                  "memoryInGB": "[variables('machineMemoryInGBRequestWorkflow')]"
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "PGUSER",
+                  "value": "[variables('PGUSER')]"
+                },
+                {
+                  "name": "PGPASSWORD",
+                  "secureValue": "[parameters('PGPASSWORD')]"
+                },
+                {
+                  "name": "PGHOST",
+                  "value": "[parameters('PGHOST')]"
+                },
+                {
+                  "name": "PGDATABASE",
+                  "value": "[variables('PGDATABASE')]"
+                },
+                {
+                  "name": "DEPLOY_START_TIME",
+                  "value": "[parameters('starttime')]"
+                },
+                {
+                  "name": "MACHINE_CORES",
+                  "value": "[variables('machineCpuCoresRequestWorkflow')]"
+                },
+                {
+                  "name": "LOG_LEVEL",
+                  "value": "TRACE"
+                },
+                {
+                  "name": "EXPORT_DESTINATION",
+                  "value": "[variables('mountPathExport')]"
+                },
+                {
+                  "name": "DATA_TIMESTAMP",
+                  "value": "[parameters('dataTimestamp')]"
+                },
+                {
+                  "name": "ISS_REPORTING_YEAR",
+                  "value": "[parameters('issReportingYear')]"
+                },
+                {
+                  "name": "UPDATE_DB",
+                  "value": "FALSE"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "factset-extracted",
+                  "mountPath": "[variables('mountPathExport')]"
+                }
+              ]
+            }
+          }
+        ],
         "restartPolicy": "[parameters('restartPolicy')]",
         "osType": "Linux",
         "volumes": [
-          {
-            "name": "workingspace",
-            "emptyDir": {}
-          },
           {
             "name": "factset-extracted",
             "azureFile": {
@@ -420,75 +230,11 @@
               "storageAccountName": "[parameters('storageAccountNameExtracted')]",
               "storageAccountKey": "[parameters('storageAccountKeyExtracted')]"
             }
-          },
-          {
-            "name": "factset-loader",
-            "azureFile": {
-              "shareName": "[parameters('storageAccountShareLoader')]",
-              "readOnly": false,
-              "storageAccountName": "[parameters('storageAccountNameLoader')]",
-              "storageAccountKey": "[parameters('storageAccountKeyLoader')]"
-            }
           }
         ]
       }
-    },
-
-    {
-      "type": "Microsoft.DBforPostgreSQL/flexibleServers",
-      "condition": "[parameters('updateDB')]",
-      "apiVersion": "2021-06-01",
-      "name": "[variables('dbServerName')]",
-      "location": "[parameters('location')]",
-      "sku": {
-        "name": "[variables('dbInstanceType')]",
-        "tier": "[variables('dbServerEdition')]"
-      },
-      "properties": {
-        "version": "[variables('postgresVersion')]",
-        "administratorLogin": "[variables('PGUSER')]",
-        "administratorLoginPassword": "[parameters('PGPASSWORD')]",
-        "network": {
-          "delegatedSubnetResourceId": "[json('null')]",
-          "privateDnsZoneArmResourceId": "[json('null')]"
-        },
-        "highAvailability": {
-          "mode": "[variables('dbHAMode')]"
-        },
-        "storage": {
-          "autoGrow": "Enabled",
-          "storageSizeGB": "[variables('dbSkuSizeGB')]"
-        },
-        "backup": {
-          "backupRetentionDays": 7,
-          "geoRedundantBackup": "Disabled"
-        },
-        "availabilityZone": "[variables('dbAvailabilityZone')]"
-      }
-    },
-    {
-      "type": "Microsoft.DBforPostgreSQL/flexibleServers/firewallRules",
-      "condition": "[parameters('updateDB')]",
-      "apiVersion": "2021-06-01",
-      "name": "[format('{0}/{1}', variables('dbServerName'), 'AllowAllWindowsAzureIps')]",
-      "properties": {
-        "endIpAddress": "0.0.0.0",
-        "startIpAddress": "0.0.0.0"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName'))]"
-      ]
-    },
-    {
-      "type": "Microsoft.DBforPostgreSQL/flexibleServers/databases",
-      "condition": "[parameters('updateDB')]",
-      "apiVersion": "2021-06-01",
-      "name": "[format('{0}/{1}', variables('dbServerName'), variables('PGDATABASE'))]",
-      "properties": {},
-      "dependsOn": [
-        "[resourceId('Microsoft.DBforPostgreSQL/flexibleServers', variables('dbServerName'))]"
-      ]
     }
+
   ],
   "outputs": {}
 }
