@@ -6,6 +6,24 @@ This repo contains the `workflow.factset` R package, a Dockerfile to build an im
 
 **QUICKSTART**: See ["Deploy"](#Deploy), below.
 
+To deploy `main` branch **with a databse and running FactSet Data Loader**:
+
+```sh
+az deployment group create \
+  --resource-group "RMI-SP-PACTA-DEV" \
+  --template-file azure-deploy.with-db.json \
+  --parameters azure-deploy.with-db.rmi-pacta.parameters.json
+```
+
+To deploy `main` branch **Extracting PACTA files from an existing `FDS` database**:
+
+```sh
+az deployment group create \
+  --resource-group "RMI-SP-PACTA-DEV" \
+  --template-file azure-deploy.extract-only.json \
+  --parameters azure-deploy.extract-only.rmi-pacta.parameters.json
+```
+
 ## `workflow.factset` R package
 
 The `workflow.factset` package's purpose is to extract data from a database prepared by the FactSet DataFeed Loader application.
@@ -75,7 +93,7 @@ The `main` tag should be used, rather than `latest`.
 
 ## Azure ARM template
 
-`azure-deply.json` is an [Azure ARM Template](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/overview) which by default deploys:
+`azure-deploy.json` is an [Azure ARM Template](https://learn.microsoft.com/en-us/azure/azure-resource-manager/templates/overview) which by default deploys:
 
 * Azure Flexible Server for PostgreSQL
   * `fds` database on that server
@@ -148,23 +166,22 @@ A parameter file with the values that the RMI-PACTA team uses for extracting dat
 # change this value as needed.
 RESOURCEGROUP="RMI-SP-PACTA-DEV"
 
-# Users with access to the RMI-PACTA Azure subscription can run:
-az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json --parameters azure-deploy.rmi-pacta.parameters.json
+# To deploy with DB and FDSLoader:
+az deployment group create \
+  --resource-group "$RESOURCEGROUP" \
+  --template-file azure-deploy.with-db.json \
+  --parameters azure-deploy.with-db.rmi-pacta.parameters.json
 
+# To deploy without DB and FDSLoader:
+az deployment group create \
+  --resource-group "$RESOURCEGROUP" \
+  --template-file azure-deploy.extract-only.json \
+  --parameters azure-deploy.extract-only.rmi-pacta.parameters.json
 ```
 
 For security, the RMI-PACTA parameters file makes heavy use of extracting secrets from an Azure Key vault, but an example file that passes parameters "in the clear" is available as [`azure-deploy.example.parameters.json`](azure-deploy.example.parameters.json)
 
-Non RMI-PACTA users can define their own parameters and invoke the ARM Template with:
-
-```sh
-# Otherwise:
-# Prompts for parameters without defaults
-az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json 
-
-# if you have created your own parameters file:
-az deployment group create --resource-group "$RESOURCEGROUP" --template-file azure-deploy.json --parameters @azure-deploy.parameters.json
-```
+Non RMI-PACTA users can define their own parameters (examples in the `azure-deploy.example.parameters.json` file) and invoke the appropriate ARM Template
 
 ## Local Development
 
