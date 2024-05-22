@@ -119,8 +119,8 @@
     "containerregistry": "ghcr.io/rmi-pacta",
     "machineCpuCoresLimitWorkflow": 2,
     "machineCpuCoresRequestWorkflow": 2,
-    "machineMemoryInGBLimitWorkflow": 12,
-    "machineMemoryInGBRequestWorkflow": 12,
+    "machineMemoryInGBLimitWorkflow": 16,
+    "machineMemoryInGBRequestWorkflow": 16,
     "mountPathExport": "/mnt/factset-extracted"
 
   },
