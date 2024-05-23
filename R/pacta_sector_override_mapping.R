@@ -24,6 +24,7 @@ pacta_sector_override_mapping <- tibble::tribble(
   "Pemex Project Funding Master Trust", "Oil&Gas", NA,
   "Ford Credit Canada Co.", "Other", NA,
   "Ford Motor Credit Co. LLC", "Other", NA,
+  "BP Capital Markets Plc", "Oil&Gas", NA,
   "General Motors Financial Co., Inc.", "Other", NA,
   "VW Credit Canada, Inc.", "Other", NA,
   "United Airlines 1995-A Pass Through Trusts", "Aviation", NA,
