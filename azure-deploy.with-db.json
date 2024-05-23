@@ -57,13 +57,6 @@
       }
     },
 
-    "PGHOSTOverride": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "Explicitly define a (full URL) hostname for PGHOST. If empty, the hostname will be derived from the container group name."
-      }
-    },
     "PGPASSWORD": {
       "type": "securestring",
       "metadata": {
@@ -177,7 +170,7 @@
 
     "FDSLoaderZipFilename": "FDSLoader-Linux-2.13.6.0.zip",
     "PGDATABASE": "FDS",
-    "PGHOST": "[if(empty(parameters('PGHOSTOverride')), concat(variables('dbServerName'), '.postgres.database.azure.com'), parameters('PGHOSTOverride'))]",
+    "PGHOST": "[concat(variables('dbServerName'), '.postgres.database.azure.com')]",
     "PGUSER": "postgres",
     "containerregistry": "ghcr.io/rmi-pacta",
     "dbAvailabilityZone": "1",
@@ -197,184 +190,7 @@
     "mountPathExport": "/mnt/factset-extracted",
     "mountPathFDSLoader": "/mnt/factset-loader",
     "mountPathWorkingSpace": "/mnt/workingspace",
-    "postgresVersion": "14",
-
-    "emptyArray": [],
-    "ContainerDefinitionWorkflow":[
-      {
-        "name": "workflow-factset",
-        "properties": {
-          "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
-          "ports": [],
-          "resources": {
-            "limits": {
-              "cpu": "[variables('machineCpuCoresLimitWorkflow')]",
-              "memoryInGB": "[variables('machineMemoryInGBLimitWorkflow')]"
-            },
-            "requests": {
-              "cpu": "[variables('machineCpuCoresRequestWorkflow')]",
-              "memoryInGB": "[variables('machineMemoryInGBRequestWorkflow')]"
-            }
-          },
-          "environmentVariables": [
-            {
-              "name": "PGUSER",
-              "value": "[variables('PGUSER')]"
-            },
-            {
-              "name": "PGPASSWORD",
-              "secureValue": "[parameters('PGPASSWORD')]"
-            },
-            {
-              "name": "PGHOST",
-              "value": "[variables('PGHOST')]"
-            },
-            {
-              "name": "PGDATABASE",
-              "value": "[variables('PGDATABASE')]"
-            },
-            {
-              "name": "DEPLOY_START_TIME",
-              "value": "[parameters('starttime')]"
-            },
-            {
-              "name": "MACHINE_CORES",
-              "value": "[variables('machineCpuCoresRequestWorkflow')]"
-            },
-            {
-              "name": "LOG_LEVEL",
-              "value": "TRACE"
-            },
-            {
-              "name": "EXPORT_DESTINATION",
-              "value": "[variables('mountPathExport')]"
-            },
-            {
-              "name": "DATA_TIMESTAMP",
-              "value": "[parameters('dataTimestamp')]"
-            },
-            {
-              "name": "ISS_REPORTING_YEAR",
-              "value": "[parameters('issReportingYear')]"
-            },
-            {
-              "name": "UPDATE_DB",
-              "value": "[parameters('updateDB')]"
-            },
-            {
-              "name": "WORKINGSPACEPATH",
-              "value": "[variables('mountPathWorkingSpace')]"
-            }
-          ],
-          "volumeMounts": [
-            {
-              "name": "factset-extracted",
-              "mountPath": "[variables('mountPathExport')]"
-            },
-            {
-              "name": "workingspace",
-              "mountPath": "[variables('mountPathWorkingSpace')]"
-            }
-          ]
-        }
-      }
-    ],
-    "ContainerDefinitionLoader": [
-      {
-        "name": "loader-runner",
-        "properties": {
-          "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
-          "ports": [],
-          "resources": {
-            "limits": {
-              "cpu": "[variables('machineCpuCoresLimitLoader')]",
-              "memoryInGB": "[variables('machineMemoryInGBLimitLoader')]"
-            },
-            "requests": {
-              "cpu": "[variables('machineCpuCoresRequestLoader')]",
-              "memoryInGB": "[variables('machineMemoryInGBRequestLoader')]"
-            }
-          },
-          "environmentVariables": [
-            {
-              "name": "RESTORE_DB",
-              "value": "[parameters('loaderDBRestore')]"
-            },
-            {
-              "name": "BACKUP_DB",
-              "value": "[parameters('loaderDBBackup')]"
-            },
-            {
-              "name": "PGUSER",
-              "value": "[variables('PGUSER')]"
-            },
-            {
-              "name": "PGPASSWORD",
-              "secureValue": "[parameters('PGPASSWORD')]"
-            },
-            {
-              "name": "PGHOST",
-              "value": "[variables('PGHOST')]"
-            },
-            {
-              "name": "PGDATABASE",
-              "value": "[variables('PGDATABASE')]"
-            },
-            {
-              "name": "FACTSET_USER",
-              "value": "[parameters('loaderFactsetUsername')]"
-            },
-            {
-              "name": "FACTSET_SERIAL",
-              "secureValue": "[parameters('loaderFactsetSerial')]"
-            },
-            {
-              "name": "KEY_FILENAME",
-              "value": "key.txt"
-            },
-            {
-              "name": "DEPLOY_START_TIME",
-              "value": "[parameters('starttime')]"
-            },
-            {
-              "name": "MACHINE_CORES",
-              "value": "[variables('machineCpuCoresRequestLoader')]"
-            },
-            {
-              "name": "WORKINGSPACEPATH",
-              "value": "[variables('mountPathWorkingSpace')]"
-            },
-            {
-              "name": "LOG_LEVEL",
-              "value": "DEBUG"
-            },
-            {
-              "name": "FDS_LOADER_PATH",
-              "value": "/home/fdsrunner"
-            },
-            {
-              "name": "FDS_LOADER_ZIP_FILENAME",
-              "value": "[variables('FDSLoaderZipFilename')]"
-            },
-            {
-              "name": "FDS_LOADER_SOURCE_PATH",
-              "value": "[variables('mountPathFDSLoader')]"
-            }
-          ],
-          "volumeMounts": [
-            {
-              "name": "factset-loader",
-              "mountPath": "[variables('mountPathFDSLoader')]"
-            },
-            {
-              "name": "workingspace",
-              "mountPath": "[variables('mountPathWorkingSpace')]"
-            }
-          ]
-        }
-      }
-    ]
-
+    "postgresVersion": "14"
   },
 
   "functions": [],
@@ -404,7 +220,180 @@
           }
         },
         "containers":
-        "[concat(variables('ContainerDefinitionWorkflow'), if(parameters('updateDB'), variables('ContainerDefinitionLoader'), variables('emptyArray')))]",
+        [
+
+          {
+            "name": "workflow-factset",
+            "properties": {
+              "image": "[concat(variables('containerregistry'),'/workflow.factset:', parameters('imageTagWorkflow'))]",
+              "ports": [],
+              "resources": {
+                "limits": {
+                  "cpu": "[variables('machineCpuCoresLimitWorkflow')]",
+                  "memoryInGB": "[variables('machineMemoryInGBLimitWorkflow')]"
+                },
+                "requests": {
+                  "cpu": "[variables('machineCpuCoresRequestWorkflow')]",
+                  "memoryInGB": "[variables('machineMemoryInGBRequestWorkflow')]"
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "PGUSER",
+                  "value": "[variables('PGUSER')]"
+                },
+                {
+                  "name": "PGPASSWORD",
+                  "secureValue": "[parameters('PGPASSWORD')]"
+                },
+                {
+                  "name": "PGHOST",
+                  "value": "[variables('PGHOST')]"
+                },
+                {
+                  "name": "PGDATABASE",
+                  "value": "[variables('PGDATABASE')]"
+                },
+                {
+                  "name": "DEPLOY_START_TIME",
+                  "value": "[parameters('starttime')]"
+                },
+                {
+                  "name": "MACHINE_CORES",
+                  "value": "[variables('machineCpuCoresRequestWorkflow')]"
+                },
+                {
+                  "name": "LOG_LEVEL",
+                  "value": "TRACE"
+                },
+                {
+                  "name": "EXPORT_DESTINATION",
+                  "value": "[variables('mountPathExport')]"
+                },
+                {
+                  "name": "DATA_TIMESTAMP",
+                  "value": "[parameters('dataTimestamp')]"
+                },
+                {
+                  "name": "ISS_REPORTING_YEAR",
+                  "value": "[parameters('issReportingYear')]"
+                },
+                {
+                  "name": "UPDATE_DB",
+                  "value": "[parameters('updateDB')]"
+                },
+                {
+                  "name": "WORKINGSPACEPATH",
+                  "value": "[variables('mountPathWorkingSpace')]"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "factset-extracted",
+                  "mountPath": "[variables('mountPathExport')]"
+                },
+                {
+                  "name": "workingspace",
+                  "mountPath": "[variables('mountPathWorkingSpace')]"
+                }
+              ]
+            }
+          },
+
+          {
+            "name": "loader-runner",
+            "properties": {
+              "image": "[concat(variables('containerregistry'),'/factset_data_loader:', parameters('imageTagLoader'))]",
+              "ports": [],
+              "resources": {
+                "limits": {
+                  "cpu": "[variables('machineCpuCoresLimitLoader')]",
+                  "memoryInGB": "[variables('machineMemoryInGBLimitLoader')]"
+                },
+                "requests": {
+                  "cpu": "[variables('machineCpuCoresRequestLoader')]",
+                  "memoryInGB": "[variables('machineMemoryInGBRequestLoader')]"
+                }
+              },
+              "environmentVariables": [
+                {
+                  "name": "RESTORE_DB",
+                  "value": "[parameters('loaderDBRestore')]"
+                },
+                {
+                  "name": "BACKUP_DB",
+                  "value": "[parameters('loaderDBBackup')]"
+                },
+                {
+                  "name": "PGUSER",
+                  "value": "[variables('PGUSER')]"
+                },
+                {
+                  "name": "PGPASSWORD",
+                  "secureValue": "[parameters('PGPASSWORD')]"
+                },
+                {
+                  "name": "PGHOST",
+                  "value": "[variables('PGHOST')]"
+                },
+                {
+                  "name": "PGDATABASE",
+                  "value": "[variables('PGDATABASE')]"
+                },
+                {
+                  "name": "FACTSET_USER",
+                  "value": "[parameters('loaderFactsetUsername')]"
+                },
+                {
+                  "name": "FACTSET_SERIAL",
+                  "secureValue": "[parameters('loaderFactsetSerial')]"
+                },
+                {
+                  "name": "KEY_FILENAME",
+                  "value": "key.txt"
+                },
+                {
+                  "name": "DEPLOY_START_TIME",
+                  "value": "[parameters('starttime')]"
+                },
+                {
+                  "name": "MACHINE_CORES",
+                  "value": "[variables('machineCpuCoresRequestLoader')]"
+                },
+                {
+                  "name": "WORKINGSPACEPATH",
+                  "value": "[variables('mountPathWorkingSpace')]"
+                },
+                {
+                  "name": "LOG_LEVEL",
+                  "value": "DEBUG"
+                },
+                {
+                  "name": "FDS_LOADER_PATH",
+                  "value": "/home/fdsrunner"
+                },
+                {
+                  "name": "FDS_LOADER_ZIP_FILENAME",
+                  "value": "[variables('FDSLoaderZipFilename')]"
+                },
+                {
+                  "name": "FDS_LOADER_SOURCE_PATH",
+                  "value": "[variables('mountPathFDSLoader')]"
+                }
+              ],
+              "volumeMounts": [
+                {
+                  "name": "factset-loader",
+                  "mountPath": "[variables('mountPathFDSLoader')]"
+                },
+                {
+                  "name": "workingspace",
+                  "mountPath": "[variables('mountPathWorkingSpace')]"
+                }
+              ]
+            }
+          }
+        ],
         "restartPolicy": "[parameters('restartPolicy')]",
         "osType": "Linux",
         "volumes": [
