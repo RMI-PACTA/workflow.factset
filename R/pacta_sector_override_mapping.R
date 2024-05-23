@@ -64,7 +64,6 @@ pacta_sector_override_mapping <- tibble::tribble(
   "TNB Global Ventures Capital Bhd.", "Power", NA,
   "Gaz Capital SA", "Oil&Gas", NA,
   "BHP Billiton Finance Ltd.", "Coal", NA,
-  "GE Aerospace", "Power", NA,
   "Toyota Finance Australia Ltd.", "Other", NA,
   "British Airways Pass Through Trust 2018-1AA", "Aviation", NA,
   "State Grid Overseas Investment (2013) Ltd.", "Power", NA,
