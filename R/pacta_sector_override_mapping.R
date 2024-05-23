@@ -60,7 +60,6 @@ pacta_sector_override_mapping <- tibble::tribble(
   "Anhui Jianghuai Automobile Group Corp. Ltd.", "Other", NA,
   "Ann Joo Resources Bhd.", "Steel", NA,
   "Apache Finance Canada LLC", "Oil&Gas", NA,
-  "Aviation", NA,
   "BBMG Corp.", "Cement", NA,
   "BG Energy Capital Plc", "Oil&Gas", NA,
   "BHP Billiton Finance (USA) Ltd.", "Coal", NA,
@@ -158,7 +157,7 @@ pacta_sector_override_mapping <- tibble::tribble(
   "Dalmia Bharat Ltd.", "Cement", NA,
   "Delta Air Lines 2002-1", "Aviation", NA,
   "Delta Air Lines Pass Through 2007-1", "Aviation", NA,
-  "Deutsche Bank M\u00e9xico SA, Instituci\u00f3n de Banca M\u00faltiple",
+  "Deutsche Bank M\u00e9xico SA, Instituci\u00f3n de Banca M\u00faltiple", "Aviation", NA, # nolint: line_length_linter
   "Devon Financing Corp. ULC", "Oil&Gas", NA,
   "Dialog Group Bhd.", "Oil&Gas", NA,
   "Dolphin Subsidiary II, Inc.", "Power", NA,
