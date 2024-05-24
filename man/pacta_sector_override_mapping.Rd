@@ -12,7 +12,7 @@ The \code{entity_id_md5} column contains the md5 hash of the entity_id, which
 is used to disambiguate the company in the FactSet database in the case of
 multiple companies with the same \code{entity_proper_name}.}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 481 rows and 3 columns.
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 480 rows and 3 columns.
 }
 \usage{
 pacta_sector_override_mapping

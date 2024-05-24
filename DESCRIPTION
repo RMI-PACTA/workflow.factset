@@ -1,6 +1,6 @@
 Package: workflow.factset
 Title: Extract Financial Data for use in PACTA
-Version: 1.0.0.9003
+Version: 1.0.0.9004
 Authors@R: 
     c(person(given = "CJ",
              family = "Yetman",
