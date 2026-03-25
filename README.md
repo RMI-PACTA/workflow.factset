@@ -1,5 +1,9 @@
 # workflow.factset
 
+[![Project Status: Unsupported](https://www.repostatus.org/badges/latest/unsupported.svg)](https://www.repostatus.org/#unsupported)
+
+**This project is archived for future reference, but no new work is expected in this repository.**
+
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 
 This repo contains the `workflow.factset` R package, a Dockerfile to build an image containing that package and its dependencies, and an Azure ARM template to deploy that image, along with [factset_data_loader](https://github.com/RMI-PACTA/factset_data_loader/) and a PostgreSQL database.
